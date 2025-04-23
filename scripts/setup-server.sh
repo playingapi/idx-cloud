@@ -104,6 +104,7 @@ systemctl enable ssh.socket >/dev/null 2>&1
 # Khởi động lại dịch vụ SSH
 if systemctl restart ssh >/dev/null 2>&1 && systemctl restart ssh.socket >/dev/null 2>&1; then
     print_success "SSH service and socket restarted successfully"
+    systemctl status ssh
 else
     print_error "Failed to restart SSH service or socket. Check systemctl status for more details."
 fi
