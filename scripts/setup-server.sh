@@ -40,6 +40,11 @@ SSHD_CONFIG="/etc/ssh/sshd_config"
 # Backup existing SSH config
 cp "$SSHD_CONFIG" "${SSHD_CONFIG}.bak"
 
+# Ensure the file ends with a newline
+if [ -n "$(tail -c 1 "$SSHD_CONFIG")" ]; then
+    echo >> "$SSHD_CONFIG"
+fi
+
 # Update settings if they exist
 sed -i '/^#\?PermitRootLogin\b/s/.*/PermitRootLogin yes/' "$SSHD_CONFIG"
 sed -i '/^#\?PasswordAuthentication\b/s/.*/PasswordAuthentication yes/' "$SSHD_CONFIG"
