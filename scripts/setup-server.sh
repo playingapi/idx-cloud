@@ -94,6 +94,8 @@ grep -q "^Port" "$SSHD_CONFIG" || echo "Port 9022" >> "$SSHD_CONFIG"
 
 print_success "SSH configuration updated"
 
+cat "$SSHD_CONFIG"
+
 ### STEP 2: Unmask & Restart SSH ###
 print_step "Unmasking and restarting SSH service..."
 
