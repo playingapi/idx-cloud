@@ -29,8 +29,11 @@ print_step() { echo -e "${YELLOW}▶️  $1${RESET}"; }
 print_success() { echo -e "${GREEN}✔ $1${RESET}"; }
 print_error() { echo -e "${RED}✖ $1${RESET}"; }
 
+
 # Start
 print_header
+
+sudo -i
 
 ### STEP 0: Kill SSSD ###
 print_step "Kill SSHD"
