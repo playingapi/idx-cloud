@@ -154,3 +154,13 @@ tailscale up
 
 ### DONE ###
 print_footer
+
+
+# Prompt the user for confirmation
+read -p "Do you want to run argosb.sh? (y/N): " response
+
+# Check if the response is 'y' or 'Y'
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    echo "Running argosb.sh..."
+    bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
+fi
