@@ -71,6 +71,8 @@ SSHD_CONFIG="/etc/ssh/sshd_config"
 # Backup existing SSH config
 cp "$SSHD_CONFIG" "${SSHD_CONFIG}.bak"
 
+cat "$SSHD_CONFIG"
+
 # Ensure the file ends with a newline
 if [ -n "$(tail -c 1 "$SSHD_CONFIG")" ]; then
     echo >> "$SSHD_CONFIG"
