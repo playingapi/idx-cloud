@@ -176,6 +176,10 @@ print_step "6. tailscale status"
 
 tailscale status
 
+print_step "tailscale ip"
+
+tailscale ip
+
 print_step "lsof -i :9022"
 lsof -i :9022
 
