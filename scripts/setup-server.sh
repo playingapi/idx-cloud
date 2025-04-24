@@ -247,3 +247,4 @@ tmux ls
 print_step "tmux att -t idx"
 #tmux att -t idx
 #tmux a
+#tmux detach
