@@ -188,6 +188,10 @@ tailscale up
 ### DONE ###
 print_footer
 
+sleep 5
+
+tailscale status
+
 
 # Prompt the user for confirmation
 read -p "Do you want to run argosb.sh? (y/N): " response
