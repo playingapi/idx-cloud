@@ -244,4 +244,5 @@ tmux new-session -s idx -d -n "" -c ~/
 
 tmux ls
 
-tmux att -t idx
+#tmux att -t idx
+#tmux a
