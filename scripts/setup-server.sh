@@ -137,6 +137,10 @@ systemctl unmask ssh.socket >/dev/null 2>&1
 systemctl enable ssh >/dev/null 2>&1
 systemctl enable ssh.socket >/dev/null 2>&1
 
+
+print_step "systemctl restart ssh"
+print_step "systemctl restart ssh.socket"
+
 # Khởi động lại dịch vụ SSH
 if systemctl restart ssh >/dev/null 2>&1 && systemctl restart ssh.socket >/dev/null 2>&1; then
     print_success "SSH service and socket restarted successfully"
@@ -171,15 +175,15 @@ fi
 
 print_step "Enabling and starting tailscaled service..."
 
-print_step "1. enable tailscaled"
+print_step "systemctl enable tailscaled"
 systemctl enable tailscaled >/dev/null 2>&1
 sleep 3
 
-print_step "2. stop tailscaled"
+print_step "systemctl stop tailscaled"
 systemctl stop tailscaled >/dev/null 2>&1
 sleep 3
 
-print_step "3. start tailscaled"
+print_step "systemctl start tailscaled"
 systemctl start tailscaled >/dev/null 2>&1
 sleep 5
 
@@ -193,22 +197,23 @@ else
 fi
 
 print_step "Bringing up Tailscale (you may need to authenticate)..."
-print_step "4. tailscale down"
+print_step "tailscale down"
 
 tailscale down
 
 sleep 3
 
-print_step "5. tailscale up"
+print_step "tailscale up"
 
 tailscale up
 
 sleep 3
 
-print_step "6. tailscale status"
+print_step "tailscale status"
 
 tailscale status
 
+print_step "lsof -i :9022"
 lsof -i :9022
 
 ### DONE ###
