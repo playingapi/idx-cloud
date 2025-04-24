@@ -234,3 +234,14 @@ if [[ "$response" =~ ^[Yy]$ ]]; then
     echo "Running argosb.sh..."
     bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
 fi
+
+
+print_step "tmux"
+
+sudo apt-get install tmux
+
+tmux new-session -s idx -d -n "" -c ~/
+
+tmux ls
+
+tmux att -t idx
