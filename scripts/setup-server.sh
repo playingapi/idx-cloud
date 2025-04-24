@@ -170,9 +170,19 @@ else
 fi
 
 print_step "Enabling and starting tailscaled service..."
+
+print_step "1. enable tailscaled"
 systemctl enable tailscaled >/dev/null 2>&1
+sleep 3
+
+print_step "2. stop tailscaled"
 systemctl stop tailscaled >/dev/null 2>&1
+sleep 3
+
+print_step "3. start tailscaled"
 systemctl start tailscaled >/dev/null 2>&1
+sleep 5
+
 
 # Kiểm tra lại status
 if systemctl is-active --quiet tailscaled; then
@@ -183,14 +193,27 @@ else
 fi
 
 print_step "Bringing up Tailscale (you may need to authenticate)..."
+print_step "4. tailscale down"
+
+tailscale down
+
+sleep 3
+
+print_step "5. tailscale up"
+
 tailscale up
+
+sleep 3
+
+print_step "6. tailscale status"
+
+tailscale status
+
+lsof -i :9022
 
 ### DONE ###
 print_footer
 
-sleep 5
-
-tailscale status
 
 
 # Prompt the user for confirmation
