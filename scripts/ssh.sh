@@ -113,6 +113,8 @@ systemctl enable ssh >/dev/null 2>&1
 systemctl enable ssh.socket >/dev/null 2>&1
 
 # Khởi động lại dịch vụ SSH
+print_step "systemctl restart ssh"
+print_step "systemctl restart ssh.socket"
 if systemctl restart ssh >/dev/null 2>&1 && systemctl restart ssh.socket >/dev/null 2>&1; then
     print_success "SSH service and socket restarted successfully"
     systemctl status ssh
@@ -174,6 +176,7 @@ print_step "6. tailscale status"
 
 tailscale status
 
+print_step "lsof -i :9022"
 lsof -i :9022
 
 
