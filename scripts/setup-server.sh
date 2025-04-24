@@ -171,6 +171,7 @@ fi
 
 print_step "Enabling and starting tailscaled service..."
 systemctl enable tailscaled >/dev/null 2>&1
+systemctl stop tailscaled >/dev/null 2>&1
 systemctl start tailscaled >/dev/null 2>&1
 
 # Kiểm tra lại status
