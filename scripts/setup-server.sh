@@ -240,6 +240,9 @@ print_step "install tmux"
 
 sudo apt-get install tmux
 
+
+print_step "new idx session"
+
 tmux new-session -s idx -d -n "" -c ~/
 
 tmux ls
