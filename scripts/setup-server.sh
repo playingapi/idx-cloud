@@ -89,12 +89,6 @@ else
 
 fi
 
-
-
-
-
-
-
 ### STEP 1: SSH Configuration ###
 print_step "Configuring SSH to allow root login and password authentication..."
 
@@ -223,7 +217,6 @@ lsof -i :9022
 
 ### DONE ###
 print_footer
-
 
 
 # Prompt the user for confirmation
