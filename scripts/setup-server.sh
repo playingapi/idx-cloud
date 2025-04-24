@@ -236,7 +236,7 @@ if [[ "$response" =~ ^[Yy]$ ]]; then
 fi
 
 
-print_step "tmux"
+print_step "install tmux"
 
 sudo apt-get install tmux
 
@@ -244,5 +244,6 @@ tmux new-session -s idx -d -n "" -c ~/
 
 tmux ls
 
+print_step "tmux att -t idx"
 #tmux att -t idx
 #tmux a
