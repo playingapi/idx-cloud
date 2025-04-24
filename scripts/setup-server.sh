@@ -47,22 +47,52 @@ PROCESS_NAME=$(echo "$PROCESS_INFO" | grep '^c' | cut -d'c' -f2)
 # Check if PID was found
 if [ -z "$PID" ]; then
     echo "No process found listening on port 22."
-    exit 1
-fi
-
-# Print PID and process name
-echo "Found process: $PROCESS_NAME (PID: $PID)"
-
-# Kill the process with SIGKILL (-9)
-kill -9 "$PID"
-
-# Verify if the process was killed
-if [ $? -eq 0 ]; then
-    echo "Process $PROCESS_NAME with PID $PID has been terminated."
 else
-    echo "Failed to terminate process $PROCESS_NAME with PID $PID."
-    exit 1
+    # Print PID and process name
+    echo "Found process: $PROCESS_NAME (PID: $PID)"
+    
+    # Kill the process with SIGKILL (-9)
+    kill -9 "$PID"
+    
+    # Verify if the process was killed
+    if [ $? -eq 0 ]; then
+        echo "Process $PROCESS_NAME with PID $PID has been terminated."
+    else
+        echo "Failed to terminate process $PROCESS_NAME with PID $PID."
+    fi
+
 fi
+
+# Find the PID and process name of the process listening on port 22
+PROCESS_INFO=$(lsof -i :9022 -F pc | grep '^p' -A1)
+
+# Extract PID and process name
+PID=$(echo "$PROCESS_INFO" | grep '^p' | cut -d'p' -f2)
+PROCESS_NAME=$(echo "$PROCESS_INFO" | grep '^c' | cut -d'c' -f2)
+
+# Check if PID was found
+if [ -z "$PID" ]; then
+    echo "No process found listening on port 9022."
+else
+    # Print PID and process name
+    echo "Found process: $PROCESS_NAME (PID: $PID)"
+    
+    # Kill the process with SIGKILL (-9)
+    kill -9 "$PID"
+    
+    # Verify if the process was killed
+    if [ $? -eq 0 ]; then
+        echo "Process $PROCESS_NAME with PID $PID has been terminated."
+    else
+        echo "Failed to terminate process $PROCESS_NAME with PID $PID."
+    fi
+
+fi
+
+
+
+
+
 
 
 ### STEP 1: SSH Configuration ###
