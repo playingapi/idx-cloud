@@ -160,18 +160,6 @@ systemctl restart docker && print_success "Docker & containerd restarted" || pri
 
 
 
-# Prompt the user for confirmation
-read -p "Do you want to run argosb.sh? (y/N): " response
-
-# Check if the response is 'y' or 'Y'
-if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "Running argosb.sh..."
-    bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
-    #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
-fi
-
-
-
 print_step "install zsh"
 
 sudo apt-get update
@@ -272,6 +260,17 @@ tailscale ip
 
 print_step "lsof -i :9022"
 lsof -i :9022
+
+
+# Prompt the user for confirmation
+read -p "Do you want to run argosb.sh? (y/N): " response
+
+# Check if the response is 'y' or 'Y'
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    echo "Running argosb.sh..."
+    bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
+    #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
+fi
 
 ### DONE ###
 print_footer
