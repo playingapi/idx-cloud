@@ -234,9 +234,11 @@ print_step "config zsh"
 
 sudo apt install zsh -y
 
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
+
+
 echo y | sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.zshrc -O ~/.zshrc
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.zsh -O ~/.p10k.zsh
 
