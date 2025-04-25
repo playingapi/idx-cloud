@@ -235,8 +235,7 @@ sudo apt-get install tmux
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-
-
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.tmux.conf ~/.tmux.conf
 
 print_step "new idx session"
 
