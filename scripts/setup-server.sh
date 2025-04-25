@@ -231,7 +231,7 @@ fi
 
 print_step "install tmux"
 
-sudo apt-get install tmux
+sudo apt-get install tmux -y
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
