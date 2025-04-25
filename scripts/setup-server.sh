@@ -157,6 +157,56 @@ systemctl unmask containerd >/dev/null 2>&1
 systemctl enable docker>/dev/null 2>&1
 systemctl restart docker && print_success "Docker & containerd restarted" || print_error "Failed to start Docker/containerd"
 
+
+
+
+# Prompt the user for confirmation
+read -p "Do you want to run argosb.sh? (y/N): " response
+
+# Check if the response is 'y' or 'Y'
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    echo "Running argosb.sh..."
+    bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
+fi
+
+
+
+print_step "config zsh"
+
+sudo apt install zsh -y
+
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
+
+
+echo y | sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.zshrc -O ~/.zshrc
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.zsh -O ~/.p10k.zsh
+
+
+print_step "install tmux"
+
+sudo apt-get install tmux -y
+
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.tmux.conf -O ~/.tmux.conf
+
+print_step "new idx session"
+
+tmux new-session -s idx -d -n "" -c ~/
+
+tmux ls
+
+export PROMPT_COMMAND=""
+
+print_step "tmux att -t idx"
+#tmux att -t idx
+#tmux a
+#tmux detach
+
+
 ### STEP 5: Install and start Tailscale ###
 print_step "Checking Tailscale installation..."
 
@@ -218,51 +268,4 @@ lsof -i :9022
 ### DONE ###
 print_footer
 
-
-# Prompt the user for confirmation
-read -p "Do you want to run argosb.sh? (y/N): " response
-
-# Check if the response is 'y' or 'Y'
-if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "Running argosb.sh..."
-    bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
-fi
-
-
-
-print_step "config zsh"
-
-sudo apt install zsh -y
-
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
-
-
-echo y | sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.zshrc -O ~/.zshrc
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.zsh -O ~/.p10k.zsh
-
-source ~/.zshrc
-
-
-print_step "install tmux"
-
-sudo apt-get install tmux -y
-
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.tmux.conf -O ~/.tmux.conf
-
-print_step "new idx session"
-
-tmux new-session -s idx -d -n "" -c ~/
-
-tmux ls
-
-export PROMPT_COMMAND=""
-
-print_step "tmux att -t idx"
-#tmux att -t idx
-#tmux a
-#tmux detach
+zsh
