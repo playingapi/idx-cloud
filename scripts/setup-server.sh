@@ -233,6 +233,10 @@ print_step "install tmux"
 
 sudo apt-get install tmux
 
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+
+
 
 print_step "new idx session"
 
