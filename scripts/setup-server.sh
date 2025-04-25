@@ -243,7 +243,6 @@ tmux new-session -s idx -d -n "" -c ~/
 
 tmux ls
 
-
 export PROMPT_COMMAND=""
 
 print_step "tmux att -t idx"
