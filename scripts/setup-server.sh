@@ -173,7 +173,7 @@ fi
 
 print_step "install zsh"
 
-sudp apt-get update
+sudo apt-get update
 sudo apt install zsh -y
 
 
