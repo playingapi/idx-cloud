@@ -179,6 +179,8 @@ sudo apt install zsh -y
 
 print_step "install ohmyzsh"
 
+
+rm -rf ~/.oh-my-zsh
 echo y | sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.zsh -O ~/.p10k.zsh
