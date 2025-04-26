@@ -177,6 +177,9 @@ wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.z
 
 print_step "install config file"
 
+sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen zh_CN.UTF-8
+
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.zshrc -O ~/.zshrc
 
