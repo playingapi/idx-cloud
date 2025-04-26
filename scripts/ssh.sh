@@ -169,8 +169,7 @@ sleep 3
 print_step "tailscale up"
 
 # 提示用户输入 Tailscale 认证密钥
-read -p "Tailscale auth key（留空则直接启动）: " key
-
+key="$TAILSCALE_AUTH_KEY"
 
 if [ -z "$key" ]; then
     tailscale up
