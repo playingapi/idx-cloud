@@ -106,3 +106,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+
+export LANG=zh_CN.UTF-8
+export LC_ALL=zh_CN.UTF-8
