@@ -203,6 +203,10 @@ print_step "tmux att -t idx"
 #tmux detach
 
 
+wget https://github.com/svenstaro/genact/releases/download/v1.4.2/genact-1.4.2-x86_64-unknown-linux-musl -O ~/genact
+chmod 777 ~/genact
+
+
 ### STEP 5: Install and start Tailscale ###
 print_step "Checking Tailscale installation..."
 
