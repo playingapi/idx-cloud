@@ -276,6 +276,7 @@ read -p "Do you want to run argosb.sh? (y/N): " response
 if [[ "$response" =~ ^[Yy]$ ]]; then
     echo "Running argosb.sh..."
     bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
+    #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
     #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
 fi
 
