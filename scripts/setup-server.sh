@@ -172,7 +172,7 @@ print_step "install ohmyzsh"
 rm -rf ~/.oh-my-zsh
 echo y | sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.p10k.zsh -O ~/.p10k.zsh
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.p10k.zsh -O ~/.p10k.zsh
 
 
 print_step "install config file"
@@ -180,8 +180,8 @@ print_step "install config file"
 sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen zh_CN.UTF-8
 
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.bashrc -O ~/.bashrc
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.zshrc -O ~/.zshrc
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.bashrc -O ~/.bashrc
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.zshrc -O ~/.zshrc
 
 
 print_step "install tmux"
@@ -190,7 +190,7 @@ sudo apt-get install tmux -y
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/.tmux.conf -O ~/.tmux.conf
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.tmux.conf -O ~/.tmux.conf
 
 print_step "new idx session"
 
@@ -294,7 +294,7 @@ read -p "Do you want to run keep-alive.sh? (y/N): " response
 
 if [[ "$response" =~ ^[Yy]$ ]]; then
     echo "Running keep-alive.sh..."
-    wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/keep-alive.sh -O ~/keep-alive.sh
+    wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/keep-alive.sh -O ~/keep-alive.sh
     chmod 777 ~/keep-alive.sh
     ~/keep-alive.sh
 fi
