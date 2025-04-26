@@ -279,6 +279,17 @@ if [[ "$response" =~ ^[Yy]$ ]]; then
     #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
 fi
 
+
+read -p "Do you want to run keep-alive.sh? (y/N): " response
+
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    echo "Running keep-alive.sh..."
+    wget https://raw.githubusercontent.com/playingapi/idx-cloud/main/scripts/keep-alive.sh -O ~/keep-alive.sh
+    chmod 777 ~/keep-alive.sh
+    ~/keep-alive.sh
+fi
+
+
 ### DONE ###
 print_footer
 
