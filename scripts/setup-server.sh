@@ -300,14 +300,14 @@ if [[ "$response" =~ ^[Yy]$ ]]; then
 fi
 
 
-read -p "Do you want to run keep-alive.sh? (y/N): " response
+#read -p "Do you want to run keep-alive.sh? (y/N): " response
 
-if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "Running keep-alive.sh..."
-    wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/keep-alive.sh -O ~/keep-alive.sh
-    chmod 777 ~/keep-alive.sh
-    ~/keep-alive.sh
-fi
+#if [[ "$response" =~ ^[Yy]$ ]]; then
+echo "Running keep-alive.sh..."
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/keep-alive.sh -O ~/keep-alive.sh
+chmod 777 ~/keep-alive.sh
+~/keep-alive.sh
+#fi
 
 
 ### DONE ###
