@@ -168,8 +168,9 @@ sleep 3
 
 print_step "tailscale up"
 
-# 提示用户输入 Tailscale 认证密钥
 key="$TAILSCALE_AUTH_KEY"
+
+echo "TAILSCALE_AUTH_KEY: $TAILSCALE_AUTH_KEY"
 
 if [ -z "$key" ]; then
     tailscale up
