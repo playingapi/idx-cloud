@@ -103,7 +103,9 @@ tmux_start() {
             local device="${devices[device_index]}"
             local device_name="${device%%:*}"
             local device_ip="${device##*:}"
-            local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022"
+            #local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022"
+
+            local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a;'"
 
             if ((window_index > 0)); then
                 if (((device_index) % panes_per_window == 0)); then
