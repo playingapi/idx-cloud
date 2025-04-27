@@ -250,6 +250,23 @@ sleep 3
 #print_step "systemctl start tailscaled"
 #systemctl start tailscaled >/dev/null 2>&1
 
+
+# 检查并杀死已存在的 tailscaled 进程
+print_step "Checking for existing tailscaled process..."
+if pgrep tailscaled >/dev/null; then
+    print_step "Killing existing tailscaled process..."
+    pkill -f tailscaled >/dev/null 2>&1
+    sleep 2
+    # 再次检查是否成功杀死
+    if pgrep tailscaled >/dev/null; then
+        print_error "Failed to kill existing tailscaled process"
+    else
+        print_success "Existing tailscaled process killed"
+    fi
+else
+    print_success "No existing tailscaled process found"
+fi
+
 print_step "Starting tailscaled with --state=mem:..."
 tailscaled --state=mem: &
 
