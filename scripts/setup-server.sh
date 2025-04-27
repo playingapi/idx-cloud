@@ -273,11 +273,12 @@ tailscaled --state=mem: &
 sleep 5
 
 
-# Kiểm tra lại status
-if systemctl is-active --quiet tailscaled; then
-    print_success "tailscaled service is running"
+# 检查 tailscaled 进程状态
+print_step "Checking tailscaled process status..."
+if pgrep tailscaled >/dev/null; then
+    print_success "tailscaled process is running"
 else
-    print_error "tailscaled service failed to start"
+    print_error "tailscaled process failed to start"
     exit 1
 fi
 
