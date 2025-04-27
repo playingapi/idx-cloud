@@ -136,13 +136,13 @@ fi
 
 print_step "Enabling and starting tailscaled service..."
 
-print_step "enable tailscaled"
-systemctl enable tailscaled >/dev/null 2>&1
-sleep 3
+#print_step "enable tailscaled"
+#systemctl enable tailscaled >/dev/null 2>&1
+#sleep 3
 
-print_step "stop tailscaled"
-systemctl stop tailscaled >/dev/null 2>&1
-sleep 3
+#print_step "stop tailscaled"
+#systemctl stop tailscaled >/dev/null 2>&1
+#sleep 3
 
 # 检查并杀死已存在的 tailscaled 进程
 print_step "Checking for existing tailscaled process..."
