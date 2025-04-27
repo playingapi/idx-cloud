@@ -239,13 +239,13 @@ fi
 
 print_step "Enabling and starting tailscaled service..."
 
-print_step "systemctl enable tailscaled"
-systemctl enable tailscaled >/dev/null 2>&1
-sleep 3
+#print_step "systemctl enable tailscaled"
+#systemctl enable tailscaled >/dev/null 2>&1
+#sleep 3
 
-print_step "systemctl stop tailscaled"
-systemctl stop tailscaled >/dev/null 2>&1
-sleep 3
+#print_step "systemctl stop tailscaled"
+#systemctl stop tailscaled >/dev/null 2>&1
+#sleep 3
 
 #print_step "systemctl start tailscaled"
 #systemctl start tailscaled >/dev/null 2>&1
