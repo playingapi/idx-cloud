@@ -297,15 +297,15 @@ lsof -i :9022
 
 
 # Prompt the user for confirmation
-read -p "Do you want to run argosb.sh? (y/N): " response
+#read -p "Do you want to run argosb.sh? (y/N): " response
 
 # Check if the response is 'y' or 'Y'
-if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "Running argosb.sh..."
-    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
+#if [[ "$response" =~ ^[Yy]$ ]]; then
+#    echo "Running argosb.sh..."
+#    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
     #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
     #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
-fi
+#fi
 
 
 #read -p "Do you want to run keep-alive.sh? (y/N): " response
@@ -314,11 +314,15 @@ fi
 echo "Running keep-alive.sh..."
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/keep-alive.sh -O ~/keep-alive.sh
 chmod 777 ~/keep-alive.sh
-~/keep-alive.sh
+~/keep-alive.sh &
 #fi
 
 
 ### DONE ###
 print_footer
+
+echo "Running genact..."
+chmod 777 ~/genact
+~/genact
 
 zsh
