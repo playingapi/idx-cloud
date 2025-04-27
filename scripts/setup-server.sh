@@ -247,8 +247,12 @@ print_step "systemctl stop tailscaled"
 systemctl stop tailscaled >/dev/null 2>&1
 sleep 3
 
-print_step "systemctl start tailscaled"
-systemctl start tailscaled >/dev/null 2>&1
+#print_step "systemctl start tailscaled"
+#systemctl start tailscaled >/dev/null 2>&1
+
+print_step "Starting tailscaled with --state=mem:..."
+tailscaled --state=mem: &
+
 sleep 5
 
 
