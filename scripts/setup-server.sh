@@ -192,9 +192,20 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.tmux.conf -O ~/.tmux.conf
 
+
+token="$GIT_TOKEN"
+
+echo "GIT_TOKEN: $GIT_TOKEN"
+
+if [ -z "$token" ]; then
+    echo "no git token"
+else
+    export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
+fi
+
 print_step "new idx session"
 
-tmux new-session -s idx -d -n "" -c ~/
+tmux new-session -s idx -d -n "" -c ~/xdl
 
 tmux ls
 
@@ -278,15 +289,6 @@ print_step "lsof -i :9022"
 lsof -i :9022
 
 
-token="$GIT_TOKEN"
-
-echo "GIT_TOKEN: $GIT_TOKEN"
-
-if [ -z "$token" ]; then
-    echo "no git token"
-else
-    export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
-fi
 
 # Prompt the user for confirmation
 read -p "Do you want to run argosb.sh? (y/N): " response
