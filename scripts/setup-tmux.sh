@@ -9,10 +9,7 @@ if [[ -z "$TAILSCALE_API_KEY" ]]; then
     echo "Error: Environment variable TAILSCALE_API_KEY is not set." >&2
     exit 1
 fi
-if [[ -z "$SSH_PASSWORD" ]]; then
-    echo "Error: Environment variable SSH_PASSWORD is not set." >&2
-    exit 1
-fi
+
 
 # 函数：动态获取 Tailscale 设备
 fetch_devices() {
@@ -106,7 +103,7 @@ tmux_start() {
             local device="${devices[device_index]}"
             local device_name="${device%%:*}"
             local device_ip="${device##*:}"
-            local ssh_command="sshpass -p \'$SSH_PASSWORD\' ssh root@$device_ip -p 9022"
+            local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022"
 
             if ((window_index > 0)); then
                 if (((device_index) % panes_per_window == 0)); then
