@@ -107,6 +107,12 @@ tmux_start() {
 
             local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a;'"
 
+            hostname_part=$(uname -n | cut -d'-' -f2)
+
+            if [[ "$device_name" == "$hostname_part" ]]; then
+                ssh_command=""
+            fi
+
             if ((window_index > 0)); then
                 if (((device_index) % panes_per_window == 0)); then
                     # 复用第一个窗格
