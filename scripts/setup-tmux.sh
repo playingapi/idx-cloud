@@ -110,7 +110,7 @@ tmux_start() {
             hostname_part=$(uname -n | cut -d'-' -f2)
 
             if [[ "$device_name" == "$hostname_part" ]]; then
-                ssh_command=""
+                ssh_command="ls"
             fi
 
             if ((window_index > 0)); then
