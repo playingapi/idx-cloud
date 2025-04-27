@@ -115,6 +115,7 @@ tmux_start() {
                     tmux send-keys -t $DEFAULT_SESSION:$((window_index)) "$ssh_command" C-m
                 else
                     tmux split-window -h -t $DEFAULT_SESSION:$((window_index)) -c "~/" "$ssh_command; $SHELL;"
+                    
                 fi
             else
                 if ((device_index == 0)); then
