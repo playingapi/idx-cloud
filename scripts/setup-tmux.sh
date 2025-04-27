@@ -106,7 +106,7 @@ tmux_start() {
             local device="${devices[device_index]}"
             local device_name="${device%%:*}"
             local device_ip="${device##*:}"
-            local ssh_command="sshpass -p \"$SSH_PASSWORD\" ssh root@$device_ip -p 9022"
+            local ssh_command="sshpass -p '$SSH_PASSWORD' ssh root@$device_ip -p 9022"
 
             if ((window_index > 0)); then
                 if (((device_index) % panes_per_window == 0)); then
