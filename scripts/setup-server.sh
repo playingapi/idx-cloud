@@ -163,7 +163,7 @@ systemctl restart docker && print_success "Docker & containerd restarted" || pri
 print_step "install zsh"
 
 sudo apt-get update
-sudo apt install zsh -y
+sudo apt-get install zsh -y
 
 
 print_step "install ohmyzsh"
