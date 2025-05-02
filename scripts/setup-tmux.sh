@@ -105,7 +105,7 @@ tmux_start() {
             local device_ip="${device##*:}"
             #local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022"
 
-            local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; exec bash'"
+            local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; exec bash'"
 
             hostname_part=$(uname -n | cut -d'-' -f2)
 
