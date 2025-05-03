@@ -359,7 +359,7 @@ command -v docker >/dev/null 2>&1 && {
 		echo "===== 设置完成 ====="
 		echo ""
 		echo "Firefox 本地访问地址: http://localhost:5800"
-		echo "Firefox 远程访问地址: http://${hostname}.tail2c200.ts.net:5800"
+		echo "Firefox 远程访问地址: http://$(hostname).tail2c200.ts.net:5800"
 		echo ""
 		echo "注意: Docker 容器设置为自动重启，除非手动停止"
 		echo "注意: 这是一个 IDX 保活方案，请确保定期访问以保持活跃状态"
