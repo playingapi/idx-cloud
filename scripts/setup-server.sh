@@ -330,6 +330,44 @@ lsof -i :9022
 #fi
 
 
+
+command -v docker >/dev/null 2>&1 && {
+    print_step "install firefox for keep idx alive"
+    
+ 	# 创建 Firefox 数据目录
+	mkdir -p ~/firefox-data
+
+	# 运行 Firefox 容器
+	echo "正在启动 Firefox 容器..."
+	docker rm -f firefox 2>/dev/null || true
+	docker run -d \
+	  --name firefox \
+	  -p 5800:5800 \
+	  -v ~/firefox-data:/config:rw \
+	  -e FF_OPEN_URL=https://idx.google.com/ \
+	  -e TZ=Asia/Shanghai \
+	  -e LANG=zh_CN.UTF-8 \
+	  -e ENABLE_CJK_FONT=1 \
+	  --restart unless-stopped \
+	  jlesage/firefox
+
+	# 检查容器是否成功启动
+	if ! docker ps | grep -q firefox; then
+	    echo "错误: Firefox 容器启动失败，请检查 Docker 是否正常运行"
+	else
+		echo "===== 设置完成 ====="
+		echo ""
+		echo "Firefox 本地访问地址: http://localhost:5800"
+		echo "Firefox 远程访问地址: http://${hostname}.tail2c200.ts.net:5800"
+		echo ""
+		echo "注意: Docker 容器设置为自动重启，除非手动停止"
+		echo "注意: 这是一个 IDX 保活方案，请确保定期访问以保持活跃状态"
+		echo ""
+	fi
+}
+
+
+
 #read -p "Do you want to run keep-alive.sh? (y/N): " response
 
 #if [[ "$response" =~ ^[Yy]$ ]]; then
