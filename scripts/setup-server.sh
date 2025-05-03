@@ -323,8 +323,8 @@ lsof -i :9022
 
 # Check if the response is 'y' or 'Y'
 #if [[ "$response" =~ ^[Yy]$ ]]; then
-#    echo "Running argosb.sh..."
-#    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
+    #echo "Running argosb.sh..."
+    #bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
     #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
     #bash <(wget -qO- https://main.ssss.nyc.mn/argox.sh)
     #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sba/main/sba.sh)
