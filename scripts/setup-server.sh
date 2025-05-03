@@ -328,6 +328,7 @@ lsof -i :9022
     #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
     #bash <(wget -qO- https://main.ssss.nyc.mn/argox.sh)
     #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sba/main/sba.sh)
+    #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sing-box/main/sing-box.sh) --LANGUAGE c --CHOOSE_PROTOCOLS a --START_PORT 8881 --PORT_NGINX 60000 --SERVER_IP $(tailscale ip | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$') --CDN skk.moe --UUID_CONFIRM 20f7fca4-86e5-4ddf-9eed-24142073d197 --ARGO=true --PORT_HOPPING_RANGE 50000:51000 --NODE_NAME_CONFIRM bucket
 #fi
 
 
