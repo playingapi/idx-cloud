@@ -326,7 +326,8 @@ lsof -i :9022
 #    echo "Running argosb.sh..."
 #    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
     #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
-    #bash <(curl -Ls https://main.ssss.nyc.mn/argox.sh)
+    #bash <(wget -qO- https://main.ssss.nyc.mn/argox.sh)
+    #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sba/main/sba.sh)
 #fi
 
 
