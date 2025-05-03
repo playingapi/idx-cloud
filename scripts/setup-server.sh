@@ -332,11 +332,11 @@ lsof -i :9022
 
 
 command -v docker >/dev/null 2>&1 && {
-    print_step "install firefox for keep idx alive"
-    
- 	# 创建 Firefox 数据目录
+	print_step "install firefox for keep idx alive"
+	    
+	# 创建 Firefox 数据目录
 	mkdir -p ~/firefox-data
-
+	
 	# 运行 Firefox 容器
 	echo "正在启动 Firefox 容器..."
 	docker rm -f firefox 2>/dev/null || true
@@ -350,7 +350,7 @@ command -v docker >/dev/null 2>&1 && {
 	  -e ENABLE_CJK_FONT=1 \
 	  --restart unless-stopped \
 	  jlesage/firefox
-
+	
 	# 检查容器是否成功启动
 	if ! docker ps | grep -q firefox; then
 	    echo "错误: Firefox 容器启动失败，请检查 Docker 是否正常运行"
