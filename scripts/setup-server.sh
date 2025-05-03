@@ -336,7 +336,7 @@ command -v docker >/dev/null 2>&1 && {
 	print_step "install firefox for keep idx alive"
 	    
 	# 创建 Firefox 数据目录
-	mkdir -p ~/firefox-data
+	mkdir -p /home/user/firefox-data
 	
 	# 运行 Firefox 容器
 	echo "正在启动 Firefox 容器..."
@@ -344,7 +344,7 @@ command -v docker >/dev/null 2>&1 && {
 	docker run -d \
 	  --name firefox \
 	  -p 5800:5800 \
-	  -v ~/firefox-data:/config:rw \
+	  -v /home/user/firefox-data:/config:rw \
 	  -e FF_OPEN_URL=https://idx.google.com/ \
 	  -e TZ=Asia/Shanghai \
 	  -e LANG=zh_CN.UTF-8 \
