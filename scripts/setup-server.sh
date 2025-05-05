@@ -342,7 +342,35 @@ lsof -i :9022
 
 command -v docker >/dev/null 2>&1 && {
 	print_step "install firefox for keep idx alive"
-	    
+
+	# 定义键值对
+	declare -A host_map=(
+	    ["zz"]="zz-46638115"
+	    ["mac"]="mac-63587035"
+	    ["pc3"]="pc3-42902620"
+	    ["mm2"]="mm2-07431120"
+	    ["mm4"]="mm4-72427397"
+	    ["pc4"]="pc4-14661919"
+	    ["pc"]="pc-21799598"
+	    ["yy"]="yy-07576362"
+	    ["bb2"]="bb2-42609298"
+	    ["pc5"]="pc5-58398084"
+	    ["mm3"]="mm3-71395385"
+	    ["pc2"]="pc2-96638532"
+	    ["mm"]="mm-56884358"
+	)
+	
+	# 获取 hostname_part
+	hostname_part=$(uname -n | cut -d'-' -f2)
+	
+	# 根据 hostname_part 获取 value 并构造 URL
+	if [[ -n "${host_map[$hostname_part]}" ]]; then
+	    FF_OPEN_URL="https://idx.google.com/${host_map[$hostname_part]}"
+	else
+	    FF_OPEN_URL="https://idx.google.com/"
+	fi
+        echo "FF_OPEN_URL: ${FF_OPEN_URL}"
+
 	# 创建 Firefox 数据目录
 	mkdir -p /home/user/firefox-data
 	
@@ -353,7 +381,7 @@ command -v docker >/dev/null 2>&1 && {
 	  --name firefox \
 	  -p 5800:5800 \
 	  -v /home/user/firefox-data:/config:rw \
-	  -e FF_OPEN_URL=https://idx.google.com/ \
+	  -e FF_OPEN_URL="$FF_OPEN_URL" \
 	  -e TZ=Asia/Shanghai \
 	  -e LANG=zh_CN.UTF-8 \
 	  -e ENABLE_CJK_FONT=1 \
