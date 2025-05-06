@@ -296,6 +296,29 @@ tailscale down
 
 sleep 3
 
+# 启用IP转发
+echo "启用IP转发..."
+if [ -d "/etc/sysctl.d" ]; then
+    echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+    echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+    sysctl -p /etc/sysctl.d/99-tailscale.conf
+else
+    echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
+    echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf
+fi
+
+# 检查firewalld并启用伪装（如果需要）
+if command -v firewall-cmd &> /dev/null; then
+    echo "检测到firewalld，启用伪装..."
+    firewall-cmd --permanent --add-masquerade
+    firewall-cmd --reload
+fi
+
+# 广告exit node
+echo "设置设备为exit node..."
+tailscale set --advertise-exit-node
+
 print_step "tailscale up"
 
 #tailscale up
@@ -310,6 +333,51 @@ else
 fi
 
 sleep 3
+
+# 启用Funnel
+echo "启用Tailscale Funnel（beta功能）..."
+echo "首次启用Funnel需要通过浏览器验证，请按照CLI提示访问URL（如 https://login.tailscale.com/f/funnel?node=xxx）"
+echo "为减少验证，可预配置ACL，在Access Controls页面添加："
+echo '{
+  "nodeAttrs": [
+    { "target": ["autogroup:member"], "attr": ["funnel"] }
+  ]
+}'
+
+# tailscale funnel on
+
+# 提示用户手动在网页端允许exit node和配置Funnel
+echo "设备已设置为exit node并启用了Funnel，请完成以下配置："
+echo "1. 访问 https://login.tailscale.com/admin"
+echo "2. 配置exit node："
+echo "   - 在 Machines 页面找到此设备"
+echo "   - 点击 ... 图标，选择 Edit route settings，启用 Use as exit node（如果未自动批准）"
+echo "3. 确认Access Controls 页面包含以下规则："
+echo '{
+  "acls": [
+    { "action": "accept", "src": ["autogroup:member"], "dst": ["autogroup:internet:*"] }
+  ],
+  "nodeAttrs": [
+    { "target": ["autogroup:member"], "attr": ["funnel"] }
+  ],
+  "autoApprovers": {
+    "exitNode": ["your-email@example.com"]
+  }
+}'
+echo "   - 将 your-email@example.com 替换为你的Tailscale账户邮箱"
+echo "   - 注意：如果ACL包含 {\"action\": \"accept\", \"src\": [\"*\"], \"dst\": [\"*:*\"]}，exit node规则可省略"
+echo "   - 如果不使用autoApprovers，可手动批准exit node，删除autoApprovers部分"
+echo "4. 保存后，exit node 和 Funnel 即可使用"
+echo "5. 手动暴露Funnel服务以允许任何人访问："
+echo "   - 启动本地服务，例如：python3 -m http.server 3000"
+echo "   - 运行：tailscale funnel 3000"
+echo "   - 获取Funnel URL（例如 https://<node-name>.<tailnet-name>.ts.net），默认通过443端口访问"
+echo "   - 任何人可通过该URL访问服务，无需Tailscale账户"
+echo "   - 注意：Funnel对外端口限于443、8443、10000，但可代理到任何本地端口（如3000）"
+echo "   - 无法同时暴露多个端口，建议使用反向代理（如Nginx）分发多个服务"
+echo "   - 确保本地服务端口未被占用，防火墙允许Tailscale流量（通常无需开放443等端口）"
+echo "   - 验证状态：tailscale funnel status"
+echo "   - 停止Funnel：tailscale funnel 3000 off 或 tailscale funnel off"
 
 print_step "tailscale status"
 
