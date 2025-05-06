@@ -370,7 +370,7 @@ echo "   - 如果不使用autoApprovers，可手动批准exit node，删除autoA
 echo "4. 保存后，exit node 和 Funnel 即可使用"
 echo "5. 手动暴露Funnel服务以允许任何人访问："
 echo "   - 启动本地服务，例如：python3 -m http.server 3000"
-echo "   - 运行：tailscale funnel 3000"
+echo "   - 运行：tailscale funnel 3000 / tailscale funnel --bg 3000"
 echo "   - 获取Funnel URL（例如 https://<node-name>.<tailnet-name>.ts.net），默认通过443端口访问"
 echo "   - 任何人可通过该URL访问服务，无需Tailscale账户"
 echo "   - 注意：Funnel对外端口限于443、8443、10000，但可代理到任何本地端口（如3000）"
