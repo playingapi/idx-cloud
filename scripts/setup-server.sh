@@ -315,9 +315,7 @@ if command -v firewall-cmd &> /dev/null; then
     firewall-cmd --reload
 fi
 
-# 广告exit node
-echo "设置设备为exit node..."
-tailscale set --advertise-exit-node
+
 
 print_step "tailscale up"
 
@@ -327,9 +325,9 @@ key="$TAILSCALE_AUTH_KEY"
 echo "TAILSCALE_AUTH_KEY: $TAILSCALE_AUTH_KEY"
 
 if [ -z "$key" ]; then
-    tailscale up
+    tailscale up --advertise-exit-node
 else
-    tailscale up --auth-key="$key"
+    tailscale up --auth-key="$key"  --advertise-exit-node
 fi
 
 sleep 3
