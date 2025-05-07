@@ -20,11 +20,16 @@
     # SSH 配置
     SSH_PASSWORD = "123qwe!@#";
 
+    # FRP 配置
+    FRP_SERVER_ADDR = "92.112.23.122";
+    FRP_SERVER_PORT = "7000";
+    FRP_AUTH_TOKEN = "aaL9Af4TbAxbdp8k";
+
     # Tailscale 配置
     TAILSCALE_AUTH_KEY = ""; # 替换为您的 Tailscale 认证密钥
 
     # 远程端口配置（保留以便参考）
-    UBUNTU_REMOTE_PORT = "6002"; # Tailscale 不直接使用
+    UBUNTU_REMOTE_PORT = "9022"; # Tailscale 不直接使用
   };
 
   # 使用哪个 nixpkgs 频道
@@ -509,6 +514,16 @@ services:
       - cloudflared_data:/etc/cloudflared
     restart: unless-stopped
 
+  frpc:
+    image: snowdreamtech/frpc
+    container_name: frpc
+    networks:
+      - idx
+    volumes:
+      - ./conf/frpc.toml:/frp/frpc.toml
+    command: -c /frp/frpc.toml
+    restart: unless-stopped
+
   sing-box:
     image: fscarmen/sing-box:pre
     container_name: sing-box
@@ -553,8 +568,42 @@ networks:
 volumes:
   ubuntu_data:
   cloudflared_data:
+  frpc_data:
 EOF
         '';
+
+        # 检查并创建 frpc 配置
+        init-02-frpc = "cat > frpc.toml << EOF
+# 通用配置
+serverAddr = \"$FRP_SERVER_ADDR\"
+serverPort = $FRP_SERVER_PORT
+loginFailExit = false
+
+# 认证配置
+auth.method = \"token\"
+auth.token = \"$FRP_AUTH_TOKEN\"
+
+# 传输配置
+transport.heartbeatInterval = 10
+transport.heartbeatTimeout = 30
+transport.dialServerKeepalive = 10
+transport.dialServerTimeout = 30
+transport.tcpMuxKeepaliveInterval = 10
+transport.poolCount = 5
+
+# 代理配置
+[[proxies]]
+name = \"ubuntu_ssh\"
+type = \"tcp\"
+localIP = \"ubuntu\"
+localPort = 22
+remotePort = $UBUNTU_REMOTE_PORT
+
+EOF
+
+    # 把 frpc 配置文件移到 conf 工作目录
+    rm -rf conf/frpc.toml
+    mv frpc.toml conf/";
 
         # 启动服务（仅启动 Ubuntu）
         start-compose = "docker compose up -d";
