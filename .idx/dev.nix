@@ -29,7 +29,7 @@
     TAILSCALE_AUTH_KEY = ""; # 替换为您的 Tailscale 认证密钥
 
     # 远程端口配置（保留以便参考）
-    UBUNTU_REMOTE_PORT = "9022"; # Tailscale 不直接使用
+    UBUNTU_REMOTE_PORT = "9023"; # Tailscale 不直接使用
   };
 
   # 使用哪个 nixpkgs 频道
