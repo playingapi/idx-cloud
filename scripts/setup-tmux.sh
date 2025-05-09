@@ -43,8 +43,9 @@ fetch_devices() {
         if [[ -z "$ip" ]]; then
             continue
         fi
-        # 处理设备名：去掉 idx- 前缀和 - 后的部分
+        # 处理设备名：去掉 idx- firebase- 前缀和 - 后的部分
         name=${name#idx-}
+        name=${name#firebase-}
         name=${name%%-*}
         devices+=("$name:$ip")
     done < <(echo "$response" | jq -c '.devices[]')
