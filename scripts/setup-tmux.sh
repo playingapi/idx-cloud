@@ -35,7 +35,7 @@ fetch_devices() {
     while IFS= read -r line; do
         name=$(echo "$line" | jq -r '.name')
         # 过滤含 idx 的设备
-        if [[ "$name" != *"idx"* ]] || [[ "$name" != *"firebase"* ]]; then
+        if [[ "$name" != *"idx"* ]] && [[ "$name" != *"firebase"* ]]; then
             continue
         fi
         # 提取 IPv4 地址
