@@ -151,4 +151,7 @@ tmux_start() {
     tmux attach -t $DEFAULT_SESSION
 }
 
+apt install -y sshpass
+apt install -y jq
+
 tmux_start 4 ""
