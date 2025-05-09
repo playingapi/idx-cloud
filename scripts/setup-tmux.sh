@@ -34,7 +34,6 @@ fetch_devices() {
     devices=()
     while IFS= read -r line; do
         name=$(echo "$line" | jq -r '.hostname')
-        echo "Debug: Processing device: $name"
         # 过滤含 idx 的设备
         if [[ "$name" != *"idx"* ]] && [[ "$name" != *"firebase"* ]]; then
             continue
