@@ -81,12 +81,17 @@ tmux_start() {
     local devices_count=${#devices[@]}
     echo "devices_count: $devices_count"
 
-    # 如果没有设备，退出
+    # 打印 devices 数组内容
+    echo "Devices list:"
     if [[ $devices_count -eq 0 ]]; then
-        echo "No devices found."
+        echo "  No devices found."
         exit 1
+    else
+        for device in "${devices[@]}"; do
+            echo "  $device"
+        done
     fi
-
+    
     # 计算每个窗口的窗格数量
     local windows_count=$(((devices_count + panes_per_window - 1) / panes_per_window))
 
