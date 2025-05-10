@@ -63,6 +63,7 @@ function download_and_run() {
     fi
 
     # Handle CPU test (mutually exclusive -c and -cp)
+    log "Debug: cpu_percentage=[${cpu_percentage}], cpu_test_interval=[${cpu_test_interval}]"
     if [[ "x${cpu_percentage}" != "x" ]]
     then
         # Check if -cp is valid
@@ -75,8 +76,8 @@ function download_and_run() {
                 log "Error: -cp and -c cannot be used together, ignoring -c"
             fi
         else
-            log "Invalid CPU percentage: [${cpu_percentage}], must be in [0, 1], ignoring -cp"
-            cpu_test=""
+            log "Invalid CPU percentage: [${cpu_percentage}], must be in [0, 1], using default -c 2h"
+            cpu_test="-c 2h"
         fi
     else
         # Handle -c if -cp is not specified
@@ -197,9 +198,10 @@ function read_args(){
     done
 
     # Validate inputs
+    log "Debug: Parsed cpu_percentage=[${cpu_percentage}]"
     if [[ "x${cpu_percentage}" != "x" ]]
     then
-        if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]+)?$ ]]
+        if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]*)?$ || ${cpu_percentage} =~ ^[0-1]$ ]]
         then
             log "Invalid CPU percentage format [${cpu_percentage}], must be in [0, 1], ignoring"
             cpu_percentage=""
