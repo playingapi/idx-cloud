@@ -31,6 +31,7 @@ func main() {
 	// /node runs the script with process check and returns Base64-encoded node info.
 	http.HandleFunc("/", runScript)
 	http.HandleFunc("/node", runScript2)
+	http.HandleFunc("/alive", alive)
 
 	log.Printf("serving http://%s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
@@ -176,4 +177,12 @@ func runScript2(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	// 直接返回 Base64 编码的节点信息，不包含任何额外日志
 	fmt.Fprintf(w, "%s", encodedOutput)
+}
+
+func alive(w http.ResponseWriter, r *http.Request) {
+	log.Printf("alive")
+	// 设置响应头为纯文本
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	// 直接返回 Base64 编码的节点信息，不包含任何额外日志
+	fmt.Fprintf(w, "%s", "alive")
 }
