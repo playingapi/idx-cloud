@@ -14,7 +14,7 @@ function get_latest_info(){
     wget -q -O ${latest_info_file} https://api.github.com/repos/layou233/NeverIdle/releases/latest
     [[ $? -ne 0 ]] && log "Failed to get latest info" && exit 1
     latest_version=$(grep tag_name ${latest_info_file} | cut -d '"' -f 4 | sed 's/^v//g')
-    latest_comments=$(grep body ${latest_info_file} | cut -d '"' -f 4)
+    latest_comments=$(grep body ${latest_info_file) | cut -d '"' -f 4)
     rm -f ${latest_info_file}
 }
 
@@ -178,7 +178,9 @@ function print_help_msg(){
 }
 
 function read_args(){
+    log "Debug: Raw arguments: [$@]"
     while getopts ":c:cp:m:n:t:p:h" opt; do
+        log "Debug: Parsing option: -$opt, argument: $OPTARG"
         case "$opt" in
             c)
               cpu_test_interval="$OPTARG";;
@@ -194,11 +196,15 @@ function read_args(){
               priority="$OPTARG";;
             h)
               print_help_msg;;
+            \?)
+              log "Invalid option: -$OPTARG";;
+            :)
+              log "Option -$OPTARG requires an argument";;
         esac
     done
 
     # Validate inputs
-    log "Debug: Parsed cpu_percentage=[${cpu_percentage}]"
+    log "Debug: Parsed cpu_percentage=[${cpu_percentage}], memory_test_size=[${memory_test_size}], network_test_interval=[${network_test_interval}]"
     if [[ "x${cpu_percentage}" != "x" ]]
     then
         if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]*)?$ || ${cpu_percentage} =~ ^[0-1]$ ]]
