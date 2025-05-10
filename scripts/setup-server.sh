@@ -492,7 +492,7 @@ print_footer
 
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/onekey-NeverIdle.sh -O ~/onekey-NeverIdle.sh
 chmod 777 ~/onekey-NeverIdle.sh
-~/onekey-NeverIdle.sh -cp 0.15 -m 2 -n 4h
+~/onekey-NeverIdle.sh -x 0.15 -m 2 -n 4h
 
 sleep 3
 
