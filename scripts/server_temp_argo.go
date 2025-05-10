@@ -126,6 +126,9 @@ func runScript(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "</pre>\n")
 
+
+	fmt.Fprintf(w, "keep alive:\n")
+	fmt.Fprintf(w, "for ((i=0; i<24*3600; i+=60)); do echo \"Refreshed at $(date)\"; curl -sL alive_url; sleep 60; done\n")
 	// 结束 HTML 页面
 	fmt.Fprintf(w, "</body>\n</html>")
 
