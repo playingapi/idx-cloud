@@ -14,18 +14,16 @@ function get_latest_info(){
     wget -q -O ${latest_info_file} https://api.github.com/repos/layou233/NeverIdle/releases/latest
     [[ $? -ne 0 ]] && log "Failed to get latest info" && exit 1
     latest_version=$(grep tag_name ${latest_info_file} | cut -d '"' -f 4 | sed 's/^v//g')
-    latest_comments=$(grep body ${latest_info_file) | cut -d '"' -f 4)
+    latest_comments=$(grep body ${latest_info_file} | cut -d '"' -f 4)
     rm -f ${latest_info_file}
 }
 
 function auto_set_mem_test_size(){
     mem_test='-m 2'
-    if [[ $mem_total -lt 4 ]]
-    then
+    if [[ $mem_total -lt 4 ]]; then
         log "AMD doesn't need to test memory!"
         mem_test=''
-    elif [[ $mem_total -lt 13 ]]
-    then
+    elif [[ $mem_total -lt 13 ]]; then
         log "Memory test size: [1G]"
         mem_test='-m 1'
     else
@@ -49,12 +47,10 @@ function download_and_run() {
     chmod +x ${download_dir}/NeverIdle
     
     # Handle memory test size
-    if [[ "x${memory_test_size}" == "x" || ${memory_test_size} -gt $mem_total ]]
-    then
+    if [[ "x${memory_test_size}" == "x" || ${memory_test_size} -gt $mem_total ]]; then
         log "Invalid memory size: [${memory_test_size}], auto-setting"
         auto_set_mem_test_size
-    elif [[ "x${memory_test_size}" == "x0" ]]
-    then
+    elif [[ "x${memory_test_size}" == "x0" ]]; then
         mem_test=''
         log "Memory test disabled."
     else
@@ -64,15 +60,11 @@ function download_and_run() {
 
     # Handle CPU test (mutually exclusive -c and -cp)
     log "Debug: cpu_percentage=[${cpu_percentage}], cpu_test_interval=[${cpu_test_interval}]"
-    if [[ "x${cpu_percentage}" != "x" ]]
-    then
-        # Check if -cp is valid
-        if [[ $(echo "$cpu_percentage >= 0 && $cpu_percentage <= 1" | bc) -eq 1 ]]
-        then
+    if [[ "x${cpu_percentage}" != "x" ]]; then
+        if [[ $(echo "$cpu_percentage >= 0 && $cpu_percentage <= 1" | bc) -eq 1 ]]; then
             cpu_test="-cp ${cpu_percentage}"
             log "CPU percentage test: [${cpu_percentage}]"
-            if [[ "x${cpu_test_interval}" != "x" ]]
-            then
+            if [[ "x${cpu_test_interval}" != "x" ]]; then
                 log "Error: -cp and -c cannot be used together, ignoring -c"
             fi
         else
@@ -80,18 +72,14 @@ function download_and_run() {
             cpu_test="-c 2h"
         fi
     else
-        # Handle -c if -cp is not specified
-        if [[ "x${cpu_test_interval}" == "x" ]]
-        then
+        if [[ "x${cpu_test_interval}" == "x" ]]; then
             cpu_test="-c 2h"
             log "CPU test interval is empty, set to default value: [2h]"
-        elif [[ "x${cpu_test_interval}" == "x0" ]]
-        then
+        elif [[ "x${cpu_test_interval}" == "x0" ]]; then
             cpu_test="-c 2h"
             log "CPU test can't disable, set to default value: [2h]."
         else
-            if [[ ${cpu_test_interval} =~ ^[0-9]+[hms][0-9]*[hms]?[0-9]*[hms]?$ ]]
-            then
+            if [[ ${cpu_test_interval} =~ ^[0-9]+[hms][0-9]*[hms]?[0-9]*[hms]?$ ]]; then
                 cpu_test="-c ${cpu_test_interval}"
                 log "CPU test interval: [${cpu_test_interval}]"
             else
@@ -102,17 +90,14 @@ function download_and_run() {
     fi
 
     # Handle network test interval
-    if [[ "x${network_test_interval}" == "x" ]]
-    then
+    if [[ "x${network_test_interval}" == "x" ]]; then
         network_test="-n 4h"
         log "Network test interval is empty, set to default value: [4h]"
-    elif [[ "x${network_test_interval}" == "x0" ]]
-    then
+    elif [[ "x${network_test_interval}" == "x0" ]]; then
         network_test=""
         log "Network test disabled."
     else
-        if [[ ${network_test_interval} =~ ^[0-9]+[hms][0-9]*[hms]?[0-9]*[hms]?$ ]]
-        then
+        if [[ ${network_test_interval} =~ ^[0-9]+[hms][0-9]*[hms]?[0-9]*[hms]?$ ]]; then
             network_test="-n ${network_test_interval}"
             log "Network test interval: [${network_test_interval}]"
         else
@@ -122,10 +107,8 @@ function download_and_run() {
     fi
 
     # Handle network concurrent connections
-    if [[ "x${network_concurrent}" != "x" ]]
-    then
-        if [[ ${network_concurrent} -gt 0 ]]
-        then
+    if [[ "x${network_concurrent}" != "x" ]]; then
+        if [[ ${network_concurrent} -gt 0 ]]; then
             network_concurrent_param="-t ${network_concurrent}"
             log "Network concurrent connections: [${network_concurrent}]"
         else
@@ -138,10 +121,8 @@ function download_and_run() {
     fi
 
     # Handle process priority
-    if [[ "x${priority}" != "x" ]]
-    then
-        if [[ ${priority} -ge -20 && ${priority} -le 19 ]]
-        then
+    if [[ "x${priority}" != "x" ]]; then
+        if [[ ${priority} -ge -20 && ${priority} -le 19 ]]; then
             priority_param="-p ${priority}"
             log "Process priority: [${priority}]"
         else
@@ -205,29 +186,24 @@ function read_args(){
 
     # Validate inputs
     log "Debug: Parsed cpu_percentage=[${cpu_percentage}], memory_test_size=[${memory_test_size}], network_test_interval=[${network_test_interval}]"
-    if [[ "x${cpu_percentage}" != "x" ]]
-    then
-        if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]*)?$ || ${cpu_percentage} =~ ^[0-1]$ ]]
-        then
+    if [[ "x${cpu_percentage}" != "x" ]]; then
+        if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]*)?$ || ${cpu_percentage} =~ ^[0-1]$ ]]; then
             log "Invalid CPU percentage format [${cpu_percentage}], must be in [0, 1], ignoring"
             cpu_percentage=""
         fi
     fi
 
-    if [[ "x${memory_test_size}" != "x" && ${memory_test_size} -lt 0 ]]
-    then
+    if [[ "x${memory_test_size}" != "x" && ${memory_test_size} -lt 0 ]]; then
         log "Invalid memory size [${memory_test_size}], auto-setting"
         memory_test_size=""
     fi
 
-    if [[ "x${network_concurrent}" != "x" && ! ${network_concurrent} =~ ^[0-9]+$ ]]
-    then
+    if [[ "x${network_concurrent}" != "x" && ! ${network_concurrent} =~ ^[0-9]+$ ]]; then
         log "Invalid network concurrent connections [${network_concurrent}], using default [10]"
         network_concurrent=""
     fi
 
-    if [[ "x${priority}" != "x" && ! ${priority} =~ ^-?[0-9]+$ ]]
-    then
+    if [[ "x${priority}" != "x" && ! ${priority} =~ ^-?[0-9]+$ ]]; then
         log "Invalid priority [${priority}], using default lowest priority"
         priority=""
     fi
@@ -235,18 +211,14 @@ function read_args(){
 
 function init(){
     mem_total=$(free -g | awk '/Mem/ {print $2}')
-
     case $(uname -m) in
-    "x86_64")
-        platform="linux-amd64"
-        ;;
-    "aarch64")
-        platform="linux-arm64"
-        ;;
-    *)
-        log "Unsupported platform!"
-        exit 1
-        ;;
+        x86_64)
+            platform="linux-amd64";;
+        aarch64)
+            platform="linux-arm64";;
+        *)
+            log "Unsupported platform!"
+            exit 1;;
     esac
 }
 
