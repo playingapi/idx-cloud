@@ -494,8 +494,14 @@ wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scri
 chmod 777 ~/onekey-NeverIdle.sh
 ~/onekey-NeverIdle.sh -cp 0.15 -m 2 -n 4h
 
-#echo "Running genact..."
-#chmod 777 ~/genact
-#~/genact
+sleep 3
+
+cat /tmp/NeverIdle.log
+
+sleep 2
+
+echo "Running genact..."
+chmod 777 ~/genact
+~/genact
 
 zsh
