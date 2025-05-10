@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: An Shen
 # Date: 2023-01-30
-# Modified: 2025-05-10 to support all NeverIdle parameters
+# Modified: 2025-05-11 to support -x parameter for CPU percentage
 
 . /etc/profile
 
@@ -14,7 +14,6 @@ function get_latest_info(){
     wget -q -O ${latest_info_file} https://api.github.com/repos/layou233/NeverIdle/releases/latest
     [[ $? -ne 0 ]] && log "Failed to get latest info" && exit 1
     latest_version=$(grep tag_name ${latest_info_file} | cut -d '"' -f 4 | sed 's/^v//g')
-    latest_comments=$(grep body ${latest_info_file} | cut -d '"' -f 4)
     rm -f ${latest_info_file}
 }
 
@@ -58,14 +57,14 @@ function download_and_run() {
         log "Memory test size: [${memory_test_size}G]"
     fi
 
-    # Handle CPU test (mutually exclusive -c and -cp)
+    # Handle CPU test (mutually exclusive -c, -x)
     log "Debug: cpu_percentage=[${cpu_percentage}], cpu_test_interval=[${cpu_test_interval}]"
     if [[ "x${cpu_percentage}" != "x" ]]; then
         if [[ $(echo "$cpu_percentage >= 0 && $cpu_percentage <= 1" | bc) -eq 1 ]]; then
             cpu_test="-cp ${cpu_percentage}"
             log "CPU percentage test: [${cpu_percentage}]"
             if [[ "x${cpu_test_interval}" != "x" ]]; then
-                log "Error: -cp and -c cannot be used together, ignoring -c"
+                log "Error: -x and -c cannot be used together, ignoring -c"
             fi
         else
             log "Invalid CPU percentage: [${cpu_percentage}], must be in [0, 1], using default -c 2h"
@@ -148,24 +147,25 @@ function download_and_run() {
 
 function print_help_msg(){
     echo "Usage:"
-    echo -e "\t-c \t CPU test interval (e.g., 12h23m34s), default: 2h, can't disable."
-    echo -e "\t-cp \t CPU percentage waste (0 to 1, e.g., 0.2 for 20%), can't be used with -c."
-    echo -e "\t-m \t Memory test size in GiB, 0 to disable, auto-set if invalid (0/<4G: none, <13G: 1G, >13G: 2G)."
-    echo -e "\t-n \t Network test interval (e.g., 4h), 0 to disable."
-    echo -e "\t-t \t Network concurrent connections, default: 10."
-    echo -e "\t-p \t Process priority (-20 to 19, higher is lower priority), default: lowest."
-    echo -e "\t-h \t Show this help info."
+    echo -e "\t-c \t CPU 测试间隔（如 12h23m34s），默认 2h，不可禁用"
+    echo -e "\t-x \t CPU 百分比浪费（0 到 1，如 0.2 表示 20%），不可与 -c 同时使用"
+    echo -e "\t-m \t 内存测试大小（GiB），0 禁用，无效时自动设置（0/<4G: 无, <13G: 1G, >13G: 2G）"
+    echo -e "\t-n \t 网络测试间隔（如 4h），0 禁用"
+    echo -e "\t-t \t 网络并发连接数，默认 10"
+    echo -e "\t-p \t 进程优先级（-20 到 19，值越大优先级越低），默认最低优先级"
+    echo -e "\t-h \t 显示帮助信息"
     exit 0
 }
 
 function read_args(){
-    log "Debug: Raw arguments: [$@]"
-    while getopts ":c:cp:m:n:t:p:h" opt; do
+    # Log all arguments explicitly to avoid truncation
+    log "Debug: Raw arguments: [$*]"
+    while getopts ":c:x:m:n:t:p:h" opt; do
         log "Debug: Parsing option: -$opt, argument: $OPTARG"
         case "$opt" in
             c)
               cpu_test_interval="$OPTARG";;
-            cp)
+            x)
               cpu_percentage="$OPTARG";;
             m)
               memory_test_size="$OPTARG";;
@@ -185,7 +185,7 @@ function read_args(){
     done
 
     # Validate inputs
-    log "Debug: Parsed cpu_percentage=[${cpu_percentage}], memory_test_size=[${memory_test_size}], network_test_interval=[${network_test_interval}]"
+    log "Debug: Parsed cpu_percentage=[${cpu_percentage}], memory_test_size=[${memory_test_size}], network_test_interval=[${network_test_interval}], network_concurrent=[${network_concurrent}]"
     if [[ "x${cpu_percentage}" != "x" ]]; then
         if ! [[ ${cpu_percentage} =~ ^[0-1](\.[0-9]*)?$ || ${cpu_percentage} =~ ^[0-1]$ ]]; then
             log "Invalid CPU percentage format [${cpu_percentage}], must be in [0, 1], ignoring"
@@ -223,7 +223,14 @@ function init(){
 }
 
 function keep_stop(){
-    pkill -9 NeverIdle
+    log "Stopping existing NeverIdle processes..."
+    pkill -9 NeverIdle 2>/dev/null
+    sleep 1
+    if pgrep NeverIdle >/dev/null; then
+        log "Warning: Some NeverIdle processes could not be stopped"
+    else
+        log "All NeverIdle processes stopped"
+    fi
 }
 
 function main(){
