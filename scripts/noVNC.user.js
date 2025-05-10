@@ -2,7 +2,7 @@
 // @name         定时刷新与noVNC自动连接器
 // @namespace    http://tampermonkey.net/
 // @version      2.3
-// @description  按用户设置的间隔（默认3分钟）自动刷新页面，并自动点击noVNC连接按钮。页面加载时自动开始计时，状态跨页面保持。
+// @description  按用户设置的间隔（默认6分钟）自动刷新页面，并自动点击noVNC连接按钮。页面加载时自动开始计时，状态跨页面保持。
 // @author       Gemini
 // @match        *://*/vnc*
 // @grant        GM_setValue
@@ -15,7 +15,7 @@
     'use strict';
 
     // --- 配置项 ---
-    const DEFAULT_INTERVAL_SECONDS = 180; // 默认刷新间隔为3分钟
+    const DEFAULT_INTERVAL_SECONDS = 360; // 默认刷新间隔为6分钟
     const CHECK_BUTTON_INTERVAL_SECONDS = 10; // 每10秒检查noVNC按钮
     const STORAGE_KEY_INTERVAL = 'continuousRefresherInterval'; // 存储间隔时间的键名
     const STORAGE_KEY_NEXT_RUN = 'continuousRefresherNextRun'; // 存储下一次运行时间戳的键名
