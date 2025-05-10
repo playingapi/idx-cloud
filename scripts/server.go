@@ -8,6 +8,8 @@
 // any other request like /name by saying "Hello, name!".
 //
 // See golang.org/x/example/outyet for a more sophisticated server.
+
+// for ((i=0; i<24*3600; i+=60)); do echo "Refreshed at $(date)"; curl -sL https://9000-firebase-go-1746831783590.cluster-joak5ukfbnbyqspg4tewa33d24.cloudworkstations.dev/alive?monospaceUid=458426; sleep 60; done
 package main
 
 import (
