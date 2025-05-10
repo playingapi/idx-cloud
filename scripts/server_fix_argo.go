@@ -100,7 +100,7 @@ func runScript(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprintf(w, "<h3>1. Output of the script (nix=y bash ...):</h3>\n<pre>\n")
-		cmd := exec.Command("bash", "-c", "nix=y uuid=9c40b6cd-6674-4eef-81f8-d039b9ff1749 vmpt=60000 agn=idx.cfsub.filegear-sg.me agk=eyJhIjoiODllMDYzZWYxOGQ3ZmVjZjhlY2E2NTBiYWFjNzZjYmYiLCJ0IjoiN2JjZTEyNmItMjY3Yy00MTRlLWIxZjgtYTAzNzZiNmZhMDRmIiwicyI6Ik1HRTRaR05qWWpJdFl6Z3dNaTAwTWpFMExXRTBPV0V0WmpJME1XTmtaR00zT1daaCJ9 bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)")
+		cmd := exec.Command("bash", "-c", "nix=y uuid=9c40b6cd-6674-4eef-81f8-d039b9ff1749 vmpt=60000 agn=idx-go.cfsub.filegear-sg.me agk=eyJhIjoiODllMDYzZWYxOGQ3ZmVjZjhlY2E2NTBiYWFjNzZjYmYiLCJ0IjoiNjY5MDRmMTItYzJhMi00YTM3LTk3MDYtOWFkMzc2NWQ2NDZlIiwicyI6Ik5ESTNNR1ExWkRjdFl6ZzFOUzAwTlRneUxXRmhPR0l0TUdSbE5qZzBOak0xWkdNMiJ9 bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)")
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			fmt.Fprintf(w, "Error executing script: %v\n", html.EscapeString(err.Error()))
@@ -157,7 +157,7 @@ func runScript2(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		cmd := exec.Command("bash", "-c", "nix=y uuid=9c40b6cd-6674-4eef-81f8-d039b9ff1749 vmpt=60000 agn=idx.cfsub.filegear-sg.me agk=eyJhIjoiODllMDYzZWYxOGQ3ZmVjZjhlY2E2NTBiYWFjNzZjYmYiLCJ0IjoiN2JjZTEyNmItMjY3Yy00MTRlLWIxZjgtYTAzNzZiNmZhMDRmIiwicyI6Ik1HRTRaR05qWWpJdFl6Z3dNaTAwTWpFMExXRTBPV0V0WmpJME1XTmtaR00zT1daaCJ9 bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)")
+		cmd := exec.Command("bash", "-c", "nix=y uuid=9c40b6cd-6674-4eef-81f8-d039b9ff1749 vmpt=60000 agn=idx-go.cfsub.filegear-sg.me agk=eyJhIjoiODllMDYzZWYxOGQ3ZmVjZjhlY2E2NTBiYWFjNzZjYmYiLCJ0IjoiNjY5MDRmMTItYzJhMi00YTM3LTk3MDYtOWFkMzc2NWQ2NDZlIiwicyI6Ik5ESTNNR1ExWkRjdFl6ZzFOUzAwTlRneUxXRmhPR0l0TUdSbE5qZzBOak0xWkdNMiJ9 bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)")	
 		_, err := cmd.CombinedOutput()
 		if err != nil {
 			http.Error(w, "Failed to execute script", http.StatusInternalServerError)
