@@ -334,6 +334,70 @@ uninstall() {
   systemctl daemon-reload
 }
 
+start_services() {
+  if [ -f "/etc/systemd/system/cpu-limit.service" ]; then
+    systemctl enable cpu-limit.service
+    if systemctl start cpu-limit.service; then
+      _green "CPU限制服务启动成功"
+    else
+      restorecon /etc/systemd/system/cpu-limit.service
+      systemctl enable cpu-limit.service
+      systemctl start cpu-limit.service
+      _green "CPU限制服务启动成功"
+    fi
+  fi
+  if [ -f "/etc/systemd/system/memory-limit.service" ]; then
+    systemctl enable memory-limit.service
+    if systemctl start memory-limit.service; then
+      _green "内存限制服务启动成功"
+    else
+      restorecon /etc/systemd/system/memory-limit.service
+      systemctl enable memory-limit.service
+      systemctl start memory-limit.service
+      _green "内存限制服务启动成功"
+    fi
+  fi
+  if [ -f "/etc/systemd/system/bandwidth_occupier.service" ]; then
+    systemctl enable bandwidth_occupier.timer
+    if systemctl start bandwidth_occupier.timer; then
+      _green "带宽限制服务启动成功"
+    else
+      restorecon /etc/systemd/system/bandwidth_occupier.timer
+      restorecon /etc/systemd/system/bandwidth_occupier.service
+      systemctl enable bandwidth_occupier.timer
+      systemctl start bandwidth_occupier.timer
+      _green "带宽限制服务启动成功"
+    fi
+  fi
+  systemctl daemon-reload
+  _green "所有服务已启动"
+}
+
+stop_services() {
+  if [ -f "/etc/systemd/system/cpu-limit.service" ]; then
+    systemctl stop cpu-limit.service
+    systemctl disable cpu-limit.service
+    kill $(pgrep dd) &>/dev/null
+    kill $(ps -efA | grep cpu-limit.sh | awk '{print $2}') &>/dev/null
+    _yellow "已停止CPU限制服务"
+  fi
+  if [ -f "/etc/systemd/system/memory-limit.service" ]; then
+    systemctl stop memory-limit.service
+    systemctl disable memory-limit.service
+    kill $(ps -efA | grep memory-limit.sh | awk '{print $2}') &>/dev/null
+    _yellow "已停止内存限制服务"
+  fi
+  if [ -f "/etc/systemd/system/bandwidth_occupier.service" ]; then
+    systemctl stop bandwidth_occupier.timer
+    systemctl disable bandwidth_occupier.timer
+    kill $(ps -efA | grep bandwidth_occupier.sh | awk '{print $2}') &>/dev/null
+    _yellow "已停止带宽限制服务"
+  fi
+  systemctl daemon-reload
+  _yellow "所有服务已停止"
+}
+
+
 check_and_install() {
   local command_name=$1
   local package_name=$2
@@ -401,7 +465,9 @@ main() {
   echo "1. 安装保活服务"
   echo "2. 卸载保活服务"
   echo "3. 一键更新脚本"
-  echo "4. 退出程序"
+  echo "4. 启动服务"
+  echo "5. 停止服务"
+  echo "6. 退出程序"
   while true; do
     reading "你的选择：" option
     case $option in
@@ -446,6 +512,14 @@ main() {
       break
       ;;
     4)
+      start_services
+      break
+      ;;
+    5)
+      stop_services
+      break
+      ;;
+    6)
       echo "退出程序"
       exit 1
       break
