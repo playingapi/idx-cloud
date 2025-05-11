@@ -39,7 +39,7 @@ fi
 
 checkver() {
   running_version=$(grep "ver=\"[0-9]\{4\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}" "$0" | awk -F '"' '{print $2}')
-  curl -L https://gitlab.com/spiritysdx/Oracle-server-keep-alive-script/-/raw/main/oalive.sh -o oalive1.sh && chmod +x oalive1.sh
+  curl -L https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/oalive.sh -o oalive1.sh && chmod +x oalive1.sh
   downloaded_version=$(grep "ver=\"[0-9]\{4\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}" oalive1.sh | awk -F '"' '{print $2}')
   if [ "$running_version" != "$downloaded_version" ]; then
     _yellow "更新脚本从 $ver 到 $downloaded_version"
