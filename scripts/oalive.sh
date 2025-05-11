@@ -335,42 +335,63 @@ uninstall() {
 }
 
 start_services() {
+  # 检查并启动 CPU 限制服务
   if [ -f "/etc/systemd/system/cpu-limit.service" ]; then
-    systemctl enable cpu-limit.service
-    if systemctl start cpu-limit.service; then
-      _green "CPU限制服务启动成功"
-    else
-      restorecon /etc/systemd/system/cpu-limit.service
+    # 检查是否有 cpu-limit.sh 或 dd 进程在运行
+    if ! pgrep -f "cpu-limit.sh" >/dev/null && ! pgrep -x "dd" >/dev/null; then
       systemctl enable cpu-limit.service
-      systemctl start cpu-limit.service
-      _green "CPU限制服务启动成功"
+      if systemctl start cpu-limit.service; then
+        _green "CPU限制服务启动成功"
+      else
+        restorecon /etc/systemd/system/cpu-limit.service
+        systemctl enable cpu-limit.service
+        systemctl start cpu-limit.service
+        _green "CPU限制服务启动成功"
+      fi
+    else
+      _yellow "CPU限制服务已在运行，跳过启动"
     fi
   fi
+
+  # 检查并启动内存限制服务
   if [ -f "/etc/systemd/system/memory-limit.service" ]; then
-    systemctl enable memory-limit.service
-    if systemctl start memory-limit.service; then
-      _green "内存限制服务启动成功"
-    else
-      restorecon /etc/systemd/system/memory-limit.service
+    # 检查是否有 memory-limit.sh 进程在运行
+    if ! pgrep -f "memory-limit.sh" >/dev/null; then
       systemctl enable memory-limit.service
-      systemctl start memory-limit.service
-      _green "内存限制服务启动成功"
-    fi
-  fi
-  if [ -f "/etc/systemd/system/bandwidth_occupier.service" ]; then
-    systemctl enable bandwidth_occupier.timer
-    if systemctl start bandwidth_occupier.timer; then
-      _green "带宽限制服务启动成功"
+      if systemctl start memory-limit.service; then
+        _green "内存限制服务启动成功"
+      else
+        restorecon /etc/systemd/system/memory-limit.service
+        systemctl enable memory-limit.service
+        systemctl start memory-limit.service
+        _green "内存限制服务启动成功"
+      fi
     else
-      restorecon /etc/systemd/system/bandwidth_occupier.timer
-      restorecon /etc/systemd/system/bandwidth_occupier.service
-      systemctl enable bandwidth_occupier.timer
-      systemctl start bandwidth_occupier.timer
-      _green "带宽限制服务启动成功"
+      _yellow "内存限制服务已在运行，跳过启动"
     fi
   fi
+
+  # 检查并启动带宽限制服务
+  if [ -f "/etc/systemd/system/bandwidth_occupier.service" ]; then
+    # 检查是否有 bandwidth_occupier.sh 或 speedtest-go 进程在运行
+    if ! pgrep -f "bandwidth_occupier.sh" >/dev/null && ! pgrep -f "speedtest-go" >/dev/null; then
+      systemctl enable bandwidth_occupier.timer
+      if systemctl start bandwidth_occupier.timer; then
+        _green "带宽限制服务启动成功"
+      else
+        restorecon /etc/systemd/system/bandwidth_occupier.timer
+        restorecon /etc/systemd/system/bandwidth_occupier.service
+        systemctl enable bandwidth_occupier.timer
+        systemctl start bandwidth_occupier.timer
+        _green "带宽限制服务启动成功"
+      fi
+    else
+      _yellow "带宽限制服务已在运行，跳过启动"
+    fi
+  fi
+
   systemctl daemon-reload
-  _green "所有服务已启动"
+  _green "所有服务启动检查完成"
 }
 
 stop_services() {
