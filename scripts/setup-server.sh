@@ -475,6 +475,9 @@ command -v docker >/dev/null 2>&1 && {
 }
 
 
+### DONE ###
+print_footer
+
 
 #read -p "Do you want to run keep-alive.sh? (y/N): " response
 
@@ -486,8 +489,8 @@ chmod 777 ~/keep-alive.sh
 #fi
 
 
-### DONE ###
-print_footer
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/oalive.sh -O ~/oalive.sh
+chmod 777 ~/oalive.sh
 
 
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/onekey-NeverIdle.sh -O ~/onekey-NeverIdle.sh
