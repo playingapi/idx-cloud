@@ -544,7 +544,7 @@ script="/home/user/.workstation/customize_environment"
 log_file="/var/log/customize_environment"
 
 if [ -f "$script" ] && grep -q "TAILSCALE_AUTH_KEY" "$script" && grep -q "GIT_TOKEN" "$script"; then
-    chmod +x "${script}"
+  chmod +x "${script}"
 else
   mkdir -p /home/user/.workstation
   
