@@ -576,7 +576,7 @@ else
   sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
   
   # 以 root 执行 setup-server.sh，不记录输出
-  sudo -i /bin/bash -c "export TAILNET=\"${TAILNET}\" TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" TS_API_KEY=\"${TS_API_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
+  sudo -i /bin/bash -c "export TS_TAILNET=\"${TS_TAILNET}\" TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" TS_API_KEY=\"${TS_API_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
   
   # 记录完成
   sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
