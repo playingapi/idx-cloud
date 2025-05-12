@@ -280,8 +280,8 @@ else
 fi
 
 print_step "Starting tailscaled with --state=mem:..."
-tailscaled --state=mem: &
-
+#tailscaled --state=mem: &
+nohup tailscaled --state=mem: >/dev/null 2>&1 &
 sleep 5
 
 
@@ -484,7 +484,9 @@ command -v docker >/dev/null 2>&1 && {
 echo "Running keep-alive.sh..."
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/keep-alive.sh -O ~/keep-alive.sh
 chmod 777 ~/keep-alive.sh
-~/keep-alive.sh &
+#~/keep-alive.sh &
+nohup ~/keep-alive.sh >/dev/null 2>&1 &
+
 #fi
 
 
