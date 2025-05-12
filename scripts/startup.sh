@@ -7,12 +7,27 @@
 # 创建 .workstation 目录
 mkdir -p /home/user/.workstation
 
+# 等待网络连接
+echo "Checking network connectivity at $(date)" >> "${log_file}"
+until ping -c 1 github.com >/dev/null 2>&1; do
+  echo "Waiting for network..." >> "${log_file}"
+  sleep 5
+done
+echo "Network is up at $(date)" >> "${log_file}"
+
 # 创建 customize_environment 脚本，动态写入环境变量
-cat << EOF > /home/user/.workstation/customize_environment
+cat << EOF > "${script}"
 #!/bin/bash
-# 以 root 执行 setup-server.sh
-sudo -i bash -c 'export TAILSCALE_AUTH_KEY="${TAILSCALE_AUTH_KEY}" GIT_TOKEN="${GIT_TOKEN}"; wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh | bash'
+# 记录开始时间
+echo "[customize_environment] Starting at \$(date)" >> "${log_file}"
+
+# 以 root 执行 setup-server.sh，不记录输出
+sudo -i /bin/bash -c 'export TAILSCALE_AUTH_KEY="\${TAILSCALE_AUTH_KEY}" GIT_TOKEN="\${GIT_TOKEN}"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)'
+
+# 记录完成
+echo "[customize_environment] Completed at \$(date)" >> "${log_file}"
 EOF
+
 
 # 设置执行权限
 chmod +x /home/user/.workstation/customize_environment
