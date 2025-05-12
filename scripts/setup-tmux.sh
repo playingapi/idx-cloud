@@ -138,6 +138,10 @@ tmux_start() {
                     tmux split-window -h -t $DEFAULT_SESSION:0 -c "~/" "$ssh_command; $SHELL;"
                 fi
             fi
+
+            # 记录 panel 与设备名的映射
+            local pane_id="${DEFAULT_SESSION}:${window_index}.${pane_index}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') $pane_id $device_name $device_ip" >> ~/ssh_connect.txt
         done
 
         # 调整窗格布局
