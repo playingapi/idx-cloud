@@ -543,25 +543,27 @@ print_step "write customize_environment for init on startup"
 script="/home/user/.workstation/customize_environment"
 log_file="/var/log/customize_environment"
 
-mkdir -p /home/user/.workstation
-chmod +x "${script}"
-
-
-cat << EOF > "${script}"
-#!/bin/bash
-# 记录开始时间
-sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
-
-# 以 root 执行 setup-server.sh，不记录输出
-sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
-
-# 记录完成
-sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
-EOF
-
-
-# 设置执行权限
-chmod +x "${script}"
+if [ -f "$script" ]; then
+    chmod +x "${script}"
+else
+  mkdir -p /home/user/.workstation
+  
+  cat << EOF > "${script}"
+  #!/bin/bash
+  # 记录开始时间
+  sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
+  
+  # 以 root 执行 setup-server.sh，不记录输出
+  sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
+  
+  # 记录完成
+  sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
+  EOF
+  
+  
+  # 设置执行权限
+  chmod +x "${script}"
+fi
 
 # 打印生成脚本内容（用于调试）
 cat "${script}"
