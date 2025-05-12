@@ -519,6 +519,9 @@ print_step "write customize_environment for init on startup"
 script="/home/user/.workstation/customize_environment"
 log_file="/var/log/customize_environment"
 
+mkdir -p /home/user/.workstation
+chmod +x "${script}"
+
 cat << EOF > "${script}"
 #!/bin/bash
 # 记录开始时间
