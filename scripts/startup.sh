@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#script="/home/user/.workstation/customize_environment"
+#log_file="/var/log/customize_environment"
+#done_file="/var/run/customize_environment_done"
+
 # 创建 .workstation 目录
 mkdir -p /home/user/.workstation
 
@@ -12,3 +16,6 @@ EOF
 
 # 设置执行权限
 chmod +x /home/user/.workstation/customize_environment
+
+
+
