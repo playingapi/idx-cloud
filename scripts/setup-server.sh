@@ -126,6 +126,28 @@ print_step "Enabling and starting tailscaled service..."
 #print_step "systemctl start tailscaled"
 #systemctl start tailscaled >/dev/null 2>&1
 
+if [ -n "$TS_API_KEY" ]; then
+    print_step "Checking Offline Device..."
+    TAILNET="${TS_TAILNET:-playingapi@gmail.com}"
+    echo "Using Tailnet: $TAILNET"
+    HOSTNAME_PART=$(uname -n | cut -d'-' -f2)
+    echo "Hostname part: $HOSTNAME_PART"
+
+    curl -s -u "$TS_API_KEY:" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices?fields=all" | \
+    jq -c '.devices[]' | while IFS= read -r device; do
+        device_name=$(echo "$device" | jq -r '.hostname')
+        device_id=$(echo "$device" | jq -r '.nodeId')
+        device_name_part=$(echo "$device_name" | cut -d'-' -f2)
+
+        if [[ "$device_name" =~ idx|firebase && "$device_name_part" = "$HOSTNAME_PART" ]]; then
+            echo "Found matching device: $device_name (ID: $device_id, Part: $device_name_part)"
+            echo "Attempting to delete device: $device_id"
+            response=$(curl -s -u "$TS_API_KEY:" -X DELETE "https://api.tailscale.com/api/v2/device/$device_id")
+	    sleep 2
+        fi
+    done
+fi
+
 
 # 检查并杀死已存在的 tailscaled 进程
 print_step "Checking for existing tailscaled process..."
@@ -554,7 +576,7 @@ else
   sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
   
   # 以 root 执行 setup-server.sh，不记录输出
-  sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
+  sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" TS_API_KEY=\"${TS_API_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
   
   # 记录完成
   sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
