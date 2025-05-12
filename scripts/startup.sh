@@ -33,4 +33,7 @@ EOF
 chmod +x "${script}"
 
 
+cat "${script}"
+
+
 
