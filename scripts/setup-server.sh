@@ -413,29 +413,6 @@ lsof -i :9022
     #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sing-box/main/sing-box.sh) --LANGUAGE c --CHOOSE_PROTOCOLS a --START_PORT 8881 --PORT_NGINX 60000 --SERVER_IP $(tailscale ip | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$') --CDN skk.moe --UUID_CONFIRM 20f7fca4-86e5-4ddf-9eed-24142073d197 --ARGO=true --PORT_HOPPING_RANGE 50000:51000 --NODE_NAME_CONFIRM bucket
 #fi
 
-print_step "write customize_environment for init on startup"
-script="/home/user/.workstation/customize_environment"
-log_file="/var/log/customize_environment"
-
-cat << EOF > "${script}"
-#!/bin/bash
-# 记录开始时间
-sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
-
-# 以 root 执行 setup-server.sh，不记录输出
-sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
-
-# 记录完成
-sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
-EOF
-
-
-# 设置执行权限
-chmod +x "${script}"
-
-# 打印生成脚本内容（用于调试）
-cat "${script}"
-
 
 ### DONE ###
 print_footer
@@ -532,8 +509,34 @@ cat /tmp/NeverIdle.log
 
 sleep 2
 
-echo "Running genact..."
-chmod 777 ~/genact
-~/genact
+#echo "Running genact..."
+#chmod 777 ~/genact
+#~/genact
+#nohup ~/genact >/dev/null 2>&1 &
+
+
+print_step "write customize_environment for init on startup"
+script="/home/user/.workstation/customize_environment"
+log_file="/var/log/customize_environment"
+
+cat << EOF > "${script}"
+#!/bin/bash
+# 记录开始时间
+sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
+
+# 以 root 执行 setup-server.sh，不记录输出
+sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
+
+# 记录完成
+sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
+EOF
+
+
+# 设置执行权限
+chmod +x "${script}"
+
+# 打印生成脚本内容（用于调试）
+cat "${script}"
+
 
 zsh
