@@ -21,14 +21,14 @@ until ping -c 1 github.com >/dev/null 2>&1; do
 done
 sudo sh -c "echo 'Network is up at $(date)' >> '${log_file}'"
 
-# 创建 customize_environment 脚本，安全替换环境变量
+# 创建 customize_environment 脚本，动态写入环境变量值
 cat << EOF > "${script}"
 #!/bin/bash
 # 记录开始时间
 sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
 
-# 以 root 执行 setup-server.sh，不记录输出，绕过缓存
-sudo -i /bin/bash -c 'export TAILSCALE_AUTH_KEY="${TAILSCALE_AUTH_KEY}" GIT_TOKEN="${GIT_TOKEN}"; bash <(wget -qO- 'https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)'
+# 以 root 执行 setup୊server.sh，不记录输出，绕过缓存
+sudo -i /bin/bash -c "export TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- \"https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh\")"
 
 # 记录完成
 sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
