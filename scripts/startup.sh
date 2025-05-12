@@ -5,8 +5,8 @@ script="/home/user/.workstation/customize_environment"
 log_file="/var/log/customize_environment"
 
 # 检查环境变量
-if [ -z "${TAILSCALE_AUTH_KEY}" ] || [ -z "${GIT_TOKEN}" ]; then
-  sudo sh -c "echo 'Error: TAILSCALE_AUTH_KEY or GIT_TOKEN not set at $(date)' >> '${log_file}'"
+if [ -z "${TS_AUTH_KEY}" ] || [ -z "${GIT_TOKEN}" ]; then
+  sudo sh -c "echo 'Error: TS_AUTH_KEY or GIT_TOKEN not set at $(date)' >> '${log_file}'"
   exit 1
 fi
 
@@ -28,7 +28,7 @@ cat << EOF > "${script}"
 sudo sh -c "echo '[customize_environment] Starting at \$(date)' >> '${log_file}'"
 
 # 以 root 执行 setup-server.sh，不记录输出
-sudo -i /bin/bash -c "export TS_TAILNET=\"${TS_TAILNET}\" TAILSCALE_AUTH_KEY=\"${TAILSCALE_AUTH_KEY}\" TS_API_KEY=\"${TS_API_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
+sudo -i /bin/bash -c "export TS_TAILNET=\"${TS_TAILNET}\" TS_AUTH_KEY=\"${TS_AUTH_KEY}\" TS_API_KEY=\"${TS_API_KEY}\" GIT_TOKEN=\"${GIT_TOKEN}\"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-server.sh)"
 
 # 记录完成
 sudo sh -c "echo '[customize_environment] Completed at \$(date)' >> '${log_file}'"
