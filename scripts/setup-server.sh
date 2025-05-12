@@ -533,8 +533,6 @@ if [[ "zz" == "$hostname_part" ]]; then
 fi
 
 
-### DONE ###
-print_footer
 
 
 
@@ -565,5 +563,7 @@ chmod +x "${script}"
 # 打印生成脚本内容（用于调试）
 cat "${script}"
 
+### DONE ###
+print_footer
 
 zsh
