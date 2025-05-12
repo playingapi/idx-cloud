@@ -9,19 +9,19 @@ RESET="\e[0m"
 
 # Header & Footer
 print_header() {
-    echo -e "${CYAN}"
-    echo "============================================"
-    echo "         🔧 SERVER AUTO CONFIG SCRIPT        "
-    echo "============================================"
-    echo -e "${RESET}"
+echo -e "${CYAN}"
+echo "============================================"
+echo "         🔧 SERVER AUTO CONFIG SCRIPT        "
+echo "============================================"
+echo -e "${RESET}"
 }
 
 print_footer() {
-    echo -e "${CYAN}"
-    echo "============================================"
-    echo "      ✅ SETUP COMPLETED SUCCESSFULLY       "
-    echo "============================================"
-    echo -e "${RESET}"
+echo -e "${CYAN}"
+echo "============================================"
+echo "      ✅ SETUP COMPLETED SUCCESSFULLY       "
+echo "============================================"
+echo -e "${RESET}"
 }
 
 # Logging Steps
@@ -83,9 +83,9 @@ token="$GIT_TOKEN"
 echo "GIT_TOKEN: $GIT_TOKEN"
 
 if [ -z "$token" ]; then
-    echo "no git token"
+echo "no git token"
 else
-    export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
+export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
 fi
 
 print_step "new idx session"
@@ -107,10 +107,10 @@ print_step "tmux att -t idx"
 print_step "Checking Tailscale installation..."
 
 if ! command -v tailscale &>/dev/null; then
-    print_step "Tailscale not found. Installing..."
-    curl -fsSL https://tailscale.com/install.sh | sh >/dev/null 2>&1 && print_success "Tailscale installed"
+print_step "Tailscale not found. Installing..."
+curl -fsSL https://tailscale.com/install.sh | sh >/dev/null 2>&1 && print_success "Tailscale installed"
 else
-    print_success "Tailscale is already installed"
+print_success "Tailscale is already installed"
 fi
 
 print_step "Enabling and starting tailscaled service..."
@@ -130,17 +130,17 @@ print_step "Enabling and starting tailscaled service..."
 # 检查并杀死已存在的 tailscaled 进程
 print_step "Checking for existing tailscaled process..."
 if pgrep tailscaled >/dev/null; then
-    print_step "Killing existing tailscaled process..."
-    pkill -f tailscaled >/dev/null 2>&1
-    sleep 2
-    # 再次检查是否成功杀死
-    if pgrep tailscaled >/dev/null; then
-        print_error "Failed to kill existing tailscaled process"
-    else
-        print_success "Existing tailscaled process killed"
-    fi
+print_step "Killing existing tailscaled process..."
+pkill -f tailscaled >/dev/null 2>&1
+sleep 2
+# 再次检查是否成功杀死
+if pgrep tailscaled >/dev/null; then
+print_error "Failed to kill existing tailscaled process"
 else
-    print_success "No existing tailscaled process found"
+print_success "Existing tailscaled process killed"
+fi
+else
+print_success "No existing tailscaled process found"
 fi
 
 print_step "Starting tailscaled with --state=mem:..."
@@ -152,10 +152,10 @@ sleep 5
 # 检查 tailscaled 进程状态
 print_step "Checking tailscaled process status..."
 if pgrep tailscaled >/dev/null; then
-    print_success "tailscaled process is running"
+print_success "tailscaled process is running"
 else
-    print_error "tailscaled process failed to start"
-    exit 1
+print_error "tailscaled process failed to start"
+exit 1
 fi
 
 print_step "Bringing up Tailscale (you may need to authenticate)..."
@@ -168,20 +168,20 @@ sleep 3
 # 启用IP转发
 echo "启用IP转发..."
 if [ -d "/etc/sysctl.d" ]; then
-    echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
-    echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
-    sysctl -p /etc/sysctl.d/99-tailscale.conf
+echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+sysctl -p /etc/sysctl.d/99-tailscale.conf
 else
-    echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
-    echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf
+echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
+echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
 fi
 
 # 检查firewalld并启用伪装（如果需要）
 if command -v firewall-cmd &> /dev/null; then
-    echo "检测到firewalld，启用伪装..."
-    firewall-cmd --permanent --add-masquerade
-    firewall-cmd --reload
+echo "检测到firewalld，启用伪装..."
+firewall-cmd --permanent --add-masquerade
+firewall-cmd --reload
 fi
 
 
@@ -194,9 +194,9 @@ key="$TAILSCALE_AUTH_KEY"
 echo "TAILSCALE_AUTH_KEY: $TAILSCALE_AUTH_KEY"
 
 if [ -z "$key" ]; then
-    tailscale up --advertise-exit-node
+tailscale up --advertise-exit-node
 else
-    tailscale up --auth-key="$key"  --advertise-exit-node
+tailscale up --auth-key="$key"  --advertise-exit-node
 fi
 
 sleep 3
@@ -206,9 +206,9 @@ echo "启用Tailscale Funnel（beta功能）..."
 echo "首次启用Funnel需要通过浏览器验证，请按照CLI提示访问URL（如 https://login.tailscale.com/f/funnel?node=xxx）"
 echo "为减少验证，可预配置ACL，在Access Controls页面添加："
 echo '{
-  "nodeAttrs": [
-    { "target": ["autogroup:member"], "attr": ["funnel"] }
-  ]
+"nodeAttrs": [
+{ "target": ["autogroup:member"], "attr": ["funnel"] }
+]
 }'
 
 # tailscale funnel on
@@ -221,15 +221,15 @@ echo "   - 在 Machines 页面找到此设备"
 echo "   - 点击 ... 图标，选择 Edit route settings，启用 Use as exit node（如果未自动批准）"
 echo "3. 确认Access Controls 页面包含以下规则："
 echo '{
-  "acls": [
-    { "action": "accept", "src": ["autogroup:member"], "dst": ["autogroup:internet:*"] }
-  ],
-  "nodeAttrs": [
-    { "target": ["autogroup:member"], "attr": ["funnel"] }
-  ],
-  "autoApprovers": {
-    "exitNode": ["your-email@example.com"]
-  }
+"acls": [
+{ "action": "accept", "src": ["autogroup:member"], "dst": ["autogroup:internet:*"] }
+],
+"nodeAttrs": [
+{ "target": ["autogroup:member"], "attr": ["funnel"] }
+],
+"autoApprovers": {
+"exitNode": ["your-email@example.com"]
+}
 }'
 echo "   - 将 your-email@example.com 替换为你的Tailscale账户邮箱"
 echo "   - 注意：如果ACL包含 {\"action\": \"accept\", \"src\": [\"*\"], \"dst\": [\"*:*\"]}，exit node规则可省略"
@@ -268,20 +268,20 @@ PROCESS_NAME=$(echo "$PROCESS_INFO" | grep '^c' | cut -d'c' -f2)
 
 # Check if PID was found
 if [ -z "$PID" ]; then
-    echo "No process found listening on port 22."
+echo "No process found listening on port 22."
 else
-    # Print PID and process name
-    echo "Found process: $PROCESS_NAME (PID: $PID)"
-    
-    # Kill the process with SIGKILL (-9)
-    kill -9 "$PID"
-    
-    # Verify if the process was killed
-    if [ $? -eq 0 ]; then
-        echo "Process $PROCESS_NAME with PID $PID has been terminated."
-    else
-        echo "Failed to terminate process $PROCESS_NAME with PID $PID."
-    fi
+# Print PID and process name
+echo "Found process: $PROCESS_NAME (PID: $PID)"
+
+# Kill the process with SIGKILL (-9)
+kill -9 "$PID"
+
+# Verify if the process was killed
+if [ $? -eq 0 ]; then
+echo "Process $PROCESS_NAME with PID $PID has been terminated."
+else
+echo "Failed to terminate process $PROCESS_NAME with PID $PID."
+fi
 
 fi
 
@@ -294,20 +294,20 @@ PROCESS_NAME=$(echo "$PROCESS_INFO" | grep '^c' | cut -d'c' -f2)
 
 # Check if PID was found
 if [ -z "$PID" ]; then
-    echo "No process found listening on port 9022."
+echo "No process found listening on port 9022."
 else
-    # Print PID and process name
-    echo "Found process: $PROCESS_NAME (PID: $PID)"
-    
-    # Kill the process with SIGKILL (-9)
-    kill -9 "$PID"
-    
-    # Verify if the process was killed
-    if [ $? -eq 0 ]; then
-        echo "Process $PROCESS_NAME with PID $PID has been terminated."
-    else
-        echo "Failed to terminate process $PROCESS_NAME with PID $PID."
-    fi
+# Print PID and process name
+echo "Found process: $PROCESS_NAME (PID: $PID)"
+
+# Kill the process with SIGKILL (-9)
+kill -9 "$PID"
+
+# Verify if the process was killed
+if [ $? -eq 0 ]; then
+echo "Process $PROCESS_NAME with PID $PID has been terminated."
+else
+echo "Failed to terminate process $PROCESS_NAME with PID $PID."
+fi
 
 fi
 
@@ -329,7 +329,7 @@ cat "$SSHD_CONFIG"
 
 # Ensure the file ends with a newline
 if [ -n "$(tail -c 1 "$SSHD_CONFIG")" ]; then
-    echo >> "$SSHD_CONFIG"
+echo >> "$SSHD_CONFIG"
 fi
 
 # Update settings if they exist
@@ -365,10 +365,10 @@ print_step "systemctl restart ssh.socket"
 
 # Khởi động lại dịch vụ SSH
 if systemctl restart ssh >/dev/null 2>&1 && systemctl restart ssh.socket >/dev/null 2>&1; then
-    print_success "SSH service and socket restarted successfully"
-    systemctl status ssh
+print_success "SSH service and socket restarted successfully"
+systemctl status ssh
 else
-    print_error "Failed to restart SSH service or socket. Check systemctl status for more details."
+print_error "Failed to restart SSH service or socket. Check systemctl status for more details."
 fi
 
 
@@ -402,85 +402,67 @@ sleep 5
 
 
 
-# Prompt the user for confirmation
-#read -p "Do you want to run argosb.sh? (y/N): " response
-
-# Check if the response is 'y' or 'Y'
-#if [[ "$response" =~ ^[Yy]$ ]]; then
-    #echo "Running argosb.sh..."
-    #bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
-    #bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
-    #bash <(wget -qO- https://main.ssss.nyc.mn/argox.sh)
-    #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sba/main/sba.sh)
-    #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sing-box/main/sing-box.sh) --LANGUAGE c --CHOOSE_PROTOCOLS a --START_PORT 8881 --PORT_NGINX 60000 --SERVER_IP $(tailscale ip | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$') --CDN skk.moe --UUID_CONFIRM 20f7fca4-86e5-4ddf-9eed-24142073d197 --ARGO=true --PORT_HOPPING_RANGE 50000:51000 --NODE_NAME_CONFIRM bucket
-#fi
-
-
-### DONE ###
-print_footer
-
-
 command -v docker >/dev/null 2>&1 && {
-	print_step "install firefox for keep idx alive"
+print_step "install firefox for keep idx alive"
 
-	# 定义键值对
-	declare -A host_map=(
-	    ["zz"]="zz-46638115"
-	    ["mac"]="mac-63587035"
-	    ["pc3"]="pc3-42902620"
-	    ["mm2"]="mm2-07431120"
-	    ["mm4"]="mm4-72427397"
-	    ["pc4"]="pc4-14661919"
-	    ["pc"]="pc-21799598"
-	    ["yy"]="yy-07576362"
-	    ["bb2"]="bb2-42609298"
-	    ["pc5"]="pc5-58398084"
-	    ["mm3"]="mm3-71395385"
-	    ["pc2"]="pc2-96638532"
-	    ["mm"]="mm-56884358"
-	)
-	
-	# 获取 hostname_part
-	hostname_part=$(uname -n | cut -d'-' -f2)
-	
-	# 根据 hostname_part 获取 value 并构造 URL
-	if [[ -n "${host_map[$hostname_part]}" ]]; then
-	    FF_OPEN_URL="https://idx.google.com/${host_map[$hostname_part]}"
-	else
-	    FF_OPEN_URL="https://idx.google.com/"
-	fi
-        echo "FF_OPEN_URL: ${FF_OPEN_URL}"
+# 定义键值对
+declare -A host_map=(
+    ["zz"]="zz-46638115"
+    ["mac"]="mac-63587035"
+    ["pc3"]="pc3-42902620"
+    ["mm2"]="mm2-07431120"
+    ["mm4"]="mm4-72427397"
+    ["pc4"]="pc4-14661919"
+    ["pc"]="pc-21799598"
+    ["yy"]="yy-07576362"
+    ["bb2"]="bb2-42609298"
+    ["pc5"]="pc5-58398084"
+    ["mm3"]="mm3-71395385"
+    ["pc2"]="pc2-96638532"
+    ["mm"]="mm-56884358"
+)
 
-	# 创建 Firefox 数据目录
-	mkdir -p /home/user/firefox-data
-	
-	# 运行 Firefox 容器
-	echo "正在启动 Firefox 容器..."
-	docker rm -f firefox 2>/dev/null || true
-	docker run -d \
-	  --name firefox \
-	  -p 5800:5800 \
-	  -v /home/user/firefox-data:/config:rw \
-	  -e FF_OPEN_URL="$FF_OPEN_URL" \
-	  -e TZ=Asia/Shanghai \
-	  -e LANG=zh_CN.UTF-8 \
-	  -e ENABLE_CJK_FONT=1 \
-	  --restart unless-stopped \
-	  jlesage/firefox
-	
-	# 检查容器是否成功启动
-	if ! docker ps | grep -q firefox; then
-	    echo "错误: Firefox 容器启动失败，请检查 Docker 是否正常运行"
-	else
-		echo "===== 设置完成 ====="
-		echo ""
-		echo "Firefox 本地访问地址: http://localhost:5800"
-		echo "Firefox 远程访问地址: http://$(hostname).tail2c200.ts.net:5800"
-		echo ""
-		echo "注意: Docker 容器设置为自动重启，除非手动停止"
-		echo "注意: 这是一个 IDX 保活方案，请确保定期访问以保持活跃状态"
-		echo ""
-	fi
+# 获取 hostname_part
+hostname_part=$(uname -n | cut -d'-' -f2)
+
+# 根据 hostname_part 获取 value 并构造 URL
+if [[ -n "${host_map[$hostname_part]}" ]]; then
+    FF_OPEN_URL="https://idx.google.com/${host_map[$hostname_part]}"
+else
+    FF_OPEN_URL="https://idx.google.com/"
+fi
+echo "FF_OPEN_URL: ${FF_OPEN_URL}"
+
+# 创建 Firefox 数据目录
+mkdir -p /home/user/firefox-data
+
+# 运行 Firefox 容器
+echo "正在启动 Firefox 容器..."
+docker rm -f firefox 2>/dev/null || true
+docker run -d \
+  --name firefox \
+  -p 5800:5800 \
+  -v /home/user/firefox-data:/config:rw \
+  -e FF_OPEN_URL="$FF_OPEN_URL" \
+  -e TZ=Asia/Shanghai \
+  -e LANG=zh_CN.UTF-8 \
+  -e ENABLE_CJK_FONT=1 \
+  --restart unless-stopped \
+  jlesage/firefox
+
+# 检查容器是否成功启动
+if ! docker ps | grep -q firefox; then
+    echo "错误: Firefox 容器启动失败，请检查 Docker 是否正常运行"
+else
+	echo "===== 设置完成 ====="
+	echo ""
+	echo "Firefox 本地访问地址: http://localhost:5800"
+	echo "Firefox 远程访问地址: http://$(hostname).tail2c200.ts.net:5800"
+	echo ""
+	echo "注意: Docker 容器设置为自动重启，除非手动停止"
+	echo "注意: 这是一个 IDX 保活方案，请确保定期访问以保持活跃状态"
+	echo ""
+fi
 }
 
 
@@ -517,6 +499,43 @@ sleep 2
 #chmod 777 ~/genact
 #~/genact
 #nohup ~/genact >/dev/null 2>&1 &
+
+
+# Prompt the user for confirmation
+
+hostname_part=$(uname -n | cut -d'-' -f2)
+
+if [[ "zz" == "$hostname_part" ]]; then
+  print_step "run argosb.sh" 
+  #echo "Running argosb.sh..."
+  #bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosb/main/argosb.sh)
+  bash <(wget -qO- https://raw.githubusercontent.com/playingapi/argosb/main/argosb.sh)
+  #bash <(wget -qO- https://main.ssss.nyc.mn/argox.sh)
+  #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sba/main/sba.sh)
+  #bash <(wget -qO- https://raw.githubusercontent.com/fscarmen/sing-box/main/sing-box.sh) --LANGUAGE c --CHOOSE_PROTOCOLS a --START_PORT 8881 --PORT_NGINX 60000 --SERVER_IP $(tailscale ip | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$') --CDN skk.moe --UUID_CONFIRM 20f7fca4-86e5-4ddf-9eed-24142073d197 --ARGO=true --PORT_HOPPING_RANGE 50000:51000 --NODE_NAME_CONFIRM bucket
+  
+  echo "Debug: jh.txt content (raw VMess URLs for manual import)"
+  cat /etc/s-box-ag/jh.txt
+  echo "Debug: list.txt content"
+  cat /etc/s-box-ag/list.txt
+  
+  
+  DOMAIN="text2kv-2j7.pages.dev"
+  
+  TOKEN="txt2"
+  FILENAME="cloudfox.txt"
+  
+  BASE64_TEXT=$(base64 -w 0 < /etc/s-box-ag/jh.txt)
+  
+  curl -k "https://$DOMAIN/$FILENAME?token=$TOKEN&b64=$BASE64_TEXT"
+  echo "更新数据完成成"
+  echo "https://$DOMAIN/$FILENAME?token=$TOKEN"
+fi
+
+
+### DONE ###
+print_footer
+
 
 
 print_step "write customize_environment for init on startup"
