@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#script="/home/user/.workstation/customize_environment"
+script="/home/user/.workstation/customize_environment"
 #log_file="/var/log/customize_environment"
 #done_file="/var/run/customize_environment_done"
 
@@ -30,7 +30,7 @@ EOF
 
 
 # 设置执行权限
-chmod +x /home/user/.workstation/customize_environment
+chmod +x "${script}"
 
 
 
