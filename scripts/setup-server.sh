@@ -114,8 +114,6 @@ locale-gen zh_CN.UTF-8
 
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.bashrc -O ~/.bashrc
 wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/.zshrc -O ~/.zshrc
-mkdir -p ~/.ssh
-wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/ssh_config -O ~/.ssh/config
 
 apt install -y curl
 apt install -y sshpass
@@ -348,6 +346,10 @@ fi
 
 ### Last STEP: SSH Configuration ###
 print_step "Configuring SSH to allow root login and password authentication..."
+
+mkdir -p ~/.ssh
+wget https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/ssh_config -O ~/.ssh/config
+
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
 
