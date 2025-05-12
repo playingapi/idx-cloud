@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script="/home/user/.workstation/customize_environment"
-#log_file="/var/log/customize_environment"
+log_file="/var/log/customize_environment"
 #done_file="/var/run/customize_environment_done"
 
 # 创建 .workstation 目录
