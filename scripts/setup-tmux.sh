@@ -166,10 +166,10 @@ tmux_start() {
             get_clone_cmd
             local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; ${GIT_CLONE_CMD}; exec bash'"
             
-            #hostname_part=$(uname -n | cut -d'-' -f2)
-            #if [[ "$device_name" == "$hostname_part" ]]; then
-            #    ssh_command="${GIT_CLONE_CMD}"
-            #fi
+            hostname_part=$(uname -n | cut -d'-' -f2)
+            if [[ "$device_name" == "$hostname_part" ]]; then
+                ssh_command="${GIT_CLONE_CMD}"
+            fi
 
             if ((window_index > 0)); then
                 if (((device_index) % panes_per_window == 0)); then
