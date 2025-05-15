@@ -192,7 +192,13 @@ tmux_start() {
 
             # 记录 panel 与设备名的映射
             local pane_id="${DEFAULT_SESSION}:${window_index}.${pane_index}"
-            echo "$(date '+%Y-%m-%d %H:%M:%S') $pane_id $device_name $device_ip" >> ~/ssh_connect.txt
+
+            if [[ -n "$GIT_CLONE_CMD" ]]; then
+                repo_url=$(echo "$GIT_CLONE_CMD" | cut -d' ' -f3)
+                echo "$(date '+%Y-%m-%d %H:%M:%S') $pane_id $device_name $device_ip $repo_url" >> ~/ssh_connect.txt
+            else
+                echo "$(date '+%Y-%m-%d %H:%M:%S') $pane_id $device_name $device_ip None" >> ~/ssh_connect.txt
+            fi
         done
 
         # 调整窗格布局
