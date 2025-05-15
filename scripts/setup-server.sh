@@ -83,9 +83,10 @@ token="$GIT_TOKEN"
 echo "GIT_TOKEN: $GIT_TOKEN"
 
 if [ -z "$token" ]; then
-echo "no git token"
+    echo "no git token"
 else
-export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
+    echo "git token found"
+    #export GIT_TOKEN="$token"; bash <(wget -qO- https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/clone-xdl.sh)
 fi
 
 print_step "new idx session"
