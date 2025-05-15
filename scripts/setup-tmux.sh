@@ -164,7 +164,7 @@ tmux_start() {
             #local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; exec bash'"
 
             get_clone_cmd
-            local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; ${GIT_CLONE_CMD}; exec bash'"
+            local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; cd /root; sudo ${GIT_CLONE_CMD}; exec bash'"
             
             hostname_part=$(uname -n | cut -d'-' -f2)
             if [[ "$device_name" == "$hostname_part" ]]; then
