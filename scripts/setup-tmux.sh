@@ -10,6 +10,11 @@ if [[ -z "$TAILSCALE_API_KEY" ]]; then
     exit 1
 fi
 
+if [[ -z "$GIT_TOKEN" ]]; then
+    echo "Error: Environment variable GIT_TOKEN is not set." >&2
+    exit 1
+fi
+
 
 # 函数：动态获取 Tailscale 设备
 fetch_devices() {
@@ -57,6 +62,50 @@ fetch_devices() {
 
     # 输出设备列表
     printf '%s\n' "${devices[@]}"
+}
+
+
+# List of repositories (global array)
+repos=(
+    "xdl-as2"
+    "xdl-pc2"
+    "xdl-pc"
+    "xdl-as"
+    "xdl-yy"
+    "xdl-bb2"
+    "xdl-pc3"
+    "xdl-mac"
+    "xdl-pc4"
+    "xdl-pc5"
+    "xdl-as3"
+    "xdl-bb"
+)
+
+# Function to set global GIT_CLONE_CMD and remove repo from array
+get_clone_cmd() {
+    local GIT_REPO=""
+
+    # Check if there are any repos left
+    if [ ${#repos[@]} -eq 0 ]; then
+        GIT_CLONE_CMD="" # Set global variable to empty
+    else
+        # Get a random index
+        local index=$((RANDOM % ${#repos[@]}))
+
+        # Assign the repo at the random index to GIT_REPO
+        GIT_REPO="${repos[$index]}"
+
+        # Remove the selected repo from the array
+        repos=("${repos[@]:0:$index}" "${repos[@]:$((index + 1))}")
+    fi
+
+    if [[ -n "$GIT_REPO" && -n "$GIT_TOKEN" ]]; then
+        # Generate GIT_CLONE_CMD
+        local GIT_USER="hhsw2015"
+        GIT_CLONE_CMD="git clone https://${GIT_USER}:${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git"
+    else
+        GIT_CLONE_CMD=""
+    fi
 }
 
 # tmux_start 函数：根据设备列表动态创建 tmux 会话
@@ -112,12 +161,15 @@ tmux_start() {
             #local ssh_command="sshpass -p '123qwe!@#' ssh root@$device_ip -p 9022"
 
             echo "device_ip:${device_ip}"
-            local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; exec bash'"
+            #local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; exec bash'"
 
+            get_clone_cmd
+            local ssh_command="sshpass -p '123qwe!@#' ssh root@${device_ip} -p 9022 -t 'tmux set -g prefix C-b; tmux unbind C-a; export TERM=xterm-256color; ${GIT_CLONE_CMD}; exec bash'"
+            
             hostname_part=$(uname -n | cut -d'-' -f2)
 
             if [[ "$device_name" == "$hostname_part" ]]; then
-                ssh_command="ls"
+                ssh_command="${GIT_CLONE_CMD}"
             fi
 
             if ((window_index > 0)); then
