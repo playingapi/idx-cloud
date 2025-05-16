@@ -56,6 +56,9 @@ fetch_devices() {
         if [[ "$name" == "zz" ]]; then
             continue
         fi
+        if [[ "$name" == "yy" ]]; then
+            continue
+        fi
         devices+=("$name:$ip")
     done < <(echo "$response" | jq -c '.devices[]')
 
