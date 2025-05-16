@@ -1,5 +1,4 @@
 command -v docker >/dev/null 2>&1 && {
-  print_step "install firefox for keep idx alive"
   
   # 定义键值对
   declare -A host_map=(
