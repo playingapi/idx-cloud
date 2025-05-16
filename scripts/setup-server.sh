@@ -151,36 +151,54 @@ if [ -n "$TS_API_KEY" ]; then
 fi
 
 
-# 检查并杀死已存在的 tailscaled 进程
-print_step "Checking for existing tailscaled process..."
+# 检查并杀死现有 tailscaled 进程
 if pgrep tailscaled >/dev/null; then
-print_step "Killing existing tailscaled process..."
-pkill -f tailscaled >/dev/null 2>&1
-sleep 2
-# 再次检查是否成功杀死
-if pgrep tailscaled >/dev/null; then
-print_error "Failed to kill existing tailscaled process"
+    print_step "杀死现有 tailscaled 进程..."
+    pkill -f tailscaled >/dev/null 2>&1
+    sleep 2
+    if pgrep tailscaled >/dev/null; then
+        print_error "无法杀死现有 tailscaled 进程"
+    else
+        print_success "现有 tailscaled 进程已杀死"
+    fi
 else
-print_success "Existing tailscaled process killed"
-fi
-else
-print_success "No existing tailscaled process found"
+    print_success "未找到现有 tailscaled 进程"
 fi
 
-print_step "Starting tailscaled with --state=mem:..."
-#tailscaled --state=mem: &
-nohup tailscaled --state=mem: >/dev/null 2>&1 &
-sleep 5
+# 尝试启动 tailscaled，最多重试 3 次
+print_step "启动 tailscaled with --state=mem:..."
+max_attempts=3
+attempt=1
 
+while [ $attempt -le $max_attempts ]; do
+    nohup tailscaled --state=mem: >/dev/null 2>&1 &
+    # 随机等待 5 到 10 秒
+    wait_time=$((RANDOM % 6 + 5))
+    print_step "等待 $wait_time 秒以检查进程状态..."
+    sleep $wait_time
 
-# 检查 tailscaled 进程状态
-print_step "Checking tailscaled process status..."
-if pgrep tailscaled >/dev/null; then
-print_success "tailscaled process is running"
-else
-print_error "tailscaled process failed to start"
-exit 1
-fi
+    # 检查 tailscaled 进程状态
+    print_step "检查 tailscaled 进程状态..."
+    if pgrep tailscaled >/dev/null; then
+        print_success "tailscaled 进程正在运行"
+        break
+    else
+        print_error "tailscaled 进程启动失败 (尝试 $attempt/$max_attempts)"
+        if [ $attempt -eq $max_attempts ]; then
+            print_error "达到最大重试次数，程序退出"
+            exit 1
+        fi
+        # 杀死可能残留的进程
+        print_step "杀死残留 tailscaled 进程..."
+        pkill -f tailscaled >/dev/null 2>&1
+        sleep 2
+        # 随机等待 5 到 10 秒
+        wait_time=$((RANDOM % 6 + 5))
+        print_step "等待 $wait_time 秒后重试..."
+        sleep $wait_time
+        ((attempt++))
+    fi
+done
 
 print_step "Bringing up Tailscale (you may need to authenticate)..."
 print_step "tailscale down"
