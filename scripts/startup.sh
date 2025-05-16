@@ -40,3 +40,14 @@ chmod +x "${script}"
 # 打印生成脚本内容（用于调试）
 cat "${script}"
 
+
+
+
+if ! command -v tailscale &>/dev/null; then
+	curl -fsSL https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-docker.sh | sh
+fi
+
+
+curl -fsSL https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/setup-firefox.sh | sh
+
+
