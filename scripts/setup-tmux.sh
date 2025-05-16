@@ -52,6 +52,9 @@ fetch_devices() {
         name=${name#idx-}
         name=${name#firebase-}
         name=${name%%-*}
+        if [[ "$name" == "zz" ]]; then
+            continue
+        fi
         devices+=("$name:$ip")
     done < <(echo "$response" | jq -c '.devices[]')
 
