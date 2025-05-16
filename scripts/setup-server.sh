@@ -108,10 +108,11 @@ print_step "tmux att -t idx"
 print_step "Checking Tailscale installation..."
 
 if ! command -v tailscale &>/dev/null; then
-print_step "Tailscale not found. Installing..."
-curl -fsSL https://tailscale.com/install.sh | sh >/dev/null 2>&1 && print_success "Tailscale installed"
+  print_step "Tailscale not found. Installing..."
+  #curl -fsSL https://tailscale.com/install.sh | sh >/dev/null 2>&1 && print_success "Tailscale installed"
+  curl -fsSL https://raw.githubusercontent.com/playingapi/idx-cloud/refs/heads/main/scripts/tailscale-install.sh | sh >/dev/null 2>&1 && print_success "Tailscale installed"
 else
-print_success "Tailscale is already installed"
+  print_success "Tailscale is already installed"
 fi
 
 print_step "Enabling and starting tailscaled service..."
