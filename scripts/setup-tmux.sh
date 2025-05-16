@@ -40,7 +40,8 @@ fetch_devices() {
     while IFS= read -r line; do
         name=$(echo "$line" | jq -r '.hostname')
         # 过滤含 idx 的设备
-        if [[ "$name" != *"idx"* ]] && [[ "$name" != *"firebase"* ]]; then
+        #if [[ "$name" != *"idx"* ]] && [[ "$name" != *"firebase"* ]]; then
+        if [[ "$name" != *"idx"* ]]; then
             continue
         fi
         # 提取 IPv4 地址
@@ -50,7 +51,7 @@ fetch_devices() {
         fi
         # 处理设备名：去掉 idx- firebase- 前缀和 - 后的部分
         name=${name#idx-}
-        name=${name#firebase-}
+        #name=${name#firebase-}
         name=${name%%-*}
         if [[ "$name" == "zz" ]]; then
             continue
