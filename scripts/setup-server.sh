@@ -155,7 +155,7 @@ fi
 if pgrep tailscaled >/dev/null; then
     print_step "杀死现有 tailscaled 进程..."
     pkill -f tailscaled >/dev/null 2>&1
-    sleep 2
+    sleep 4
     if pgrep tailscaled >/dev/null; then
         print_error "无法杀死现有 tailscaled 进程"
     else
