@@ -151,19 +151,6 @@ if [ -n "$TS_API_KEY" ]; then
 fi
 
 
-# 检查并杀死现有 tailscaled 进程
-if pgrep tailscaled >/dev/null; then
-    print_step "杀死现有 tailscaled 进程..."
-    pkill -f tailscaled >/dev/null 2>&1
-    sleep 4
-    if pgrep tailscaled >/dev/null; then
-        print_error "无法杀死现有 tailscaled 进程"
-    else
-        print_success "现有 tailscaled 进程已杀死"
-    fi
-else
-    print_success "未找到现有 tailscaled 进程"
-fi
 
 # 尝试启动 tailscaled，最多重试 3 次
 print_step "启动 tailscaled with --state=mem:..."
@@ -174,6 +161,21 @@ INCREMENT_RANGE=3  # 控制随机增加的时间范围（1到此值秒）
 INITIAL_WAIT_RANGE=6  # 控制初次等待的随机范围（5到4+此值秒）
 
 while [ $attempt -le $max_attempts ]; do
+
+    # 检查并杀死现有 tailscaled 进程
+    if pgrep tailscaled >/dev/null; then
+        print_step "杀死现有 tailscaled 进程..."
+        pkill -f tailscaled >/dev/null 2>&1
+        sleep 4
+        if pgrep tailscaled >/dev/null; then
+	    print_error "无法杀死现有 tailscaled 进程"
+        else
+	    print_success "现有 tailscaled 进程已杀死"
+        fi
+    else
+        print_success "未找到现有 tailscaled 进程, 尝试启动"
+    fi
+
     nohup tailscaled --state=mem: >/dev/null 2>&1 &
     # 随机等待时间：第一次5到4+INITIAL_WAIT_RANGE秒，后续在之前基础上增加1-INCREMENT_RANGE秒
     if [ $attempt -eq 1 ]; then
@@ -197,10 +199,6 @@ while [ $attempt -le $max_attempts ]; do
             print_error "达到最大重试次数，程序退出"
             exit 1
         fi
-        # 杀死可能残留的进程
-        print_step "杀死残留 tailscaled 进程..."
-        pkill -f tailscaled >/dev/null 2>&1
-        sleep 4
         ((attempt++))
     fi
 done
