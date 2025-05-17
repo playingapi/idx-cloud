@@ -169,11 +169,20 @@ fi
 print_step "启动 tailscaled with --state=mem:..."
 max_attempts=3
 attempt=1
+base_wait_time=0
+INCREMENT_RANGE=3  # 控制随机增加的时间范围（1到此值秒）
+INITIAL_WAIT_RANGE=6  # 控制初次等待的随机范围（5到4+此值秒）
 
 while [ $attempt -le $max_attempts ]; do
     nohup tailscaled --state=mem: >/dev/null 2>&1 &
-    # 随机等待 5 到 10 秒
-    wait_time=$((RANDOM % 6 + 5))
+    # 随机等待时间：第一次5到4+INITIAL_WAIT_RANGE秒，后续在之前基础上增加1-INCREMENT_RANGE秒
+    if [ $attempt -eq 1 ]; then
+        wait_time=$((RANDOM % $INITIAL_WAIT_RANGE + 5))
+    else
+        increment=$((RANDOM % $INCREMENT_RANGE + 1))
+        wait_time=$((base_wait_time + increment))
+    fi
+    base_wait_time=$wait_time
     print_step "等待 $wait_time 秒以检查进程状态..."
     sleep $wait_time
 
@@ -191,11 +200,7 @@ while [ $attempt -le $max_attempts ]; do
         # 杀死可能残留的进程
         print_step "杀死残留 tailscaled 进程..."
         pkill -f tailscaled >/dev/null 2>&1
-        sleep 2
-        # 随机等待 5 到 10 秒
-        wait_time=$((RANDOM % 6 + 5))
-        print_step "等待 $wait_time 秒后重试..."
-        sleep $wait_time
+        sleep 4
         ((attempt++))
     fi
 done
